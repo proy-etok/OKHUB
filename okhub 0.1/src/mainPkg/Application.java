@@ -20,7 +20,7 @@ public class Application
 		case '1': (new Clase1()).run(); break;
 		case '2': (new Clase2()).run(); break;
 		case '3': (new Clase3()).run(); break;
-		default:  System.out.print("Opcion no valida, saliendo, chau"); break;
+		default:  System.out.print("Opcion no valida, saliendo, chau chau adios!"); break;
 		}
 		
 	}
