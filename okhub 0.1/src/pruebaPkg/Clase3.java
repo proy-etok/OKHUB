@@ -10,3 +10,5 @@ public class Clase3 implements IRuneable
 		return 3;
 	}
 }
+
+//comentariuo
