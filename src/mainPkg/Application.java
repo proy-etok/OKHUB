@@ -1,5 +1,7 @@
 package mainPkg;
 
+import GUIPkg.*;
+
 import pruebaPkg.*;
 
 public class Application 
@@ -12,7 +14,9 @@ public class Application
 	public static void main(String[] args) 
 	{
 		
-		System.out.print("presione 1 2 3 o 4 o 5 para llamar al metodo run de la clase respectiva: \n");
+		Ventana_Login.Crear_Ventana_Login();
+		
+	/*	System.out.print("presione 1 2 3 o 4 o 5 para llamar al metodo run de la clase respectiva: \n");
 		
 		char claseElegida = U.leerChar();
 	
@@ -24,7 +28,7 @@ public class Application
 		case '4': (new Clase4()).run(); break;
 		case '5': System.out.print("Opcion valida"); break;
 		default:  System.out.print("Opcion no valida, saliedo"); break;
-		}
+		}*/
 		
 	}
 
