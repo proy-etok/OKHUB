@@ -98,9 +98,9 @@ public class Ventana_Login extends JDialog {
 //	**************************************************************************
 
 	public ImageIcon Cargar_Imagen( int width , int height ) {
+		//C:\\Documents and Settings\\Administrador\\Escritorio\\carpeta de java\\Java\\Prueba GUI\\src\\MainPkg\\Images\\EscudoOK.jpg
 		
-		
-		ImageIcon ImagenEscudoOKaux = new ImageIcon( "C:\\Documents and Settings\\Administrador\\Escritorio\\carpeta de java\\Java\\Prueba GUI\\src\\MainPkg\\Images\\EscudoOK.jpg" );	
+		ImageIcon ImagenEscudoOKaux = new ImageIcon( getClass().getResource( "EscudoOK.jpg" ) );	
 		ImageIcon ImagenEscudoOK = new ImageIcon( ImagenEscudoOKaux.getImage().getScaledInstance( width , height , Image.SCALE_DEFAULT ) );
 		return ImagenEscudoOK;
 		
