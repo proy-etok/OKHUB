@@ -1,6 +1,7 @@
 package GUIPkg;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.FocusTraversalPolicy;
 import java.awt.Image;
 
 import javax.swing.ComboBoxModel;
@@ -14,14 +15,17 @@ import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 //import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
 import javax.swing.JRadioButton;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import java.awt.Font;
 //import com.jgoodies.forms.factories.DefaultComponentFactory;
 
-//*los imports comentados el ecplipse me los parcó con error 
+//*los imports comentados el ecplipse me los marcó con error 
 //cuando movi el .java a la carpeta del proyecto. Hay que ver 
 //que onda
 
@@ -145,10 +149,12 @@ public class Ventana_Login extends JDialog {
 //		**************************************************************************		
 		
 		JRadioButton rbRecordarUsuario = new JRadioButton( "Recordar usuario" );
+		rbRecordarUsuario.setFont( new Font ( "Tahoma" , Font.PLAIN , 10 ) );
 		rbRecordarUsuario.setBounds( 100 , 234 , 109 , 23 );
 		contentPanel.add( rbRecordarUsuario );
 		
 		JRadioButton rbRecordarContraseña = new JRadioButton( "Recordar contrase\u00F1a" );
+		rbRecordarContraseña.setFont( new Font ( "Tahoma" , Font.PLAIN , 10 ) );
 		rbRecordarContraseña.setBounds( 100 , 291 , 137 , 23 );
 		contentPanel.add( rbRecordarContraseña );
 		
@@ -157,11 +163,13 @@ public class Ventana_Login extends JDialog {
 //		**************************************************************************		
 		
 		JLabel labelUsuario = new JLabel( "Usuario:" );
+		labelUsuario.setFont( new Font ( "Tahoma" , Font.PLAIN , 10 ) );
 		labelUsuario.setBounds( 50 , 210 , 40 , 17 );
 		contentPanel.add( labelUsuario );
 		
 		
 		JLabel labelContraseña = new JLabel( "Contrase\u00F1a:" );
+		labelContraseña.setFont( new Font ( "Tahoma" , Font.PLAIN , 10 ) );
 		labelContraseña.setBounds( 30 , 267 , 60 , 17 );
 		contentPanel.add( labelContraseña );
 		
@@ -194,7 +202,7 @@ public class Ventana_Login extends JDialog {
 //				**************************************************************************
 //				Cuando se apreta el OK - se confirma la contraseña
 //				**************************************************************************	
-				
+					
 				okbuttonOK.addActionListener( new ActionListener() {
 					public void actionPerformed( ActionEvent e ) {
 						
@@ -230,7 +238,7 @@ public class Ventana_Login extends JDialog {
 			}
 		}
 		
-//		setFocusTraversalPolicy( new FocusTraversalOnArray( new Component[]{ getContentPane(), contentPanel 
+//		setFocusTraversalPolicy( new FocusTraversalPolicy( new Component[]{ getContentPane(), contentPanel 
 //								, buttonPane , okbuttonOK , cancelbuttonSalir , passwordfieldContraseña } ) );
 		
 		
