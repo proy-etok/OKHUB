@@ -1,5 +1,6 @@
 package GUIPkg;
 import java.awt.BorderLayout;
+import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.FocusTraversalPolicy;
 import java.awt.Image;
@@ -17,12 +18,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-//import org.eclipse.wb.swing.FocusTraversalOnArray;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
 import javax.swing.JRadioButton;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import java.awt.Font;
+import javax.swing.SwingConstants;
+import java.awt.Color;
 //import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 //*los imports comentados el ecplipse me los marcó con error 
@@ -31,11 +34,12 @@ import java.awt.Font;
 
 public class Ventana_Login extends JDialog {
 
+
 	private final JPanel contentPanel = new JPanel();
 	private JPasswordField passwordfieldContraseña;
 	private JPanel buttonPane;
-	private JButton okbuttonOK;
-	private JButton cancelbuttonSalir;
+	private JButton buttonOK;
+	private JButton buttonSalir;
 
 	/**
 	 * @author GSeva
@@ -43,69 +47,19 @@ public class Ventana_Login extends JDialog {
 	 * @return 
 	 */
 
-	
+	public Ventana_Login dialog;
 	
 	public static void Crear_Ventana_Login () {
 		
 		try {
 			Ventana_Login dialog = new Ventana_Login();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-			
+			dialog.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
+			dialog.setVisible( true );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
 	}
-	
-	/**
-	 * Metodo de confirmacion de contraseña
-	 * @param usuario 
-	 */
-	
-//	**************************************************************************
-//	Metodo de ejemplo que confirma la contraseña - mas adelante se le deberá 
-//	aplicar la parte de la base de datos
-//	**************************************************************************
-	
-	public void confirmar_contraseña ( String usuario ) {
-		
-		
-		char[] contraseña = passwordfieldContraseña.getPassword();
-		String contraseñaString = "";
-		for ( char simbolo : contraseña )
-			contraseñaString += simbolo;						
-	
-		if ( contraseñaString.contentEquals( "12341234" ) && usuario.contentEquals( "pepe" ) ) {
-			JOptionPane.showMessageDialog( null, "Cargando sus datos ..",
-					"Bienvenido", JOptionPane.INFORMATION_MESSAGE );
 			
-		}
-	
-		else {
-			JOptionPane.showMessageDialog( null, "Contraseña incorrecta",
-					"Error", JOptionPane.INFORMATION_MESSAGE );
-		}
-	}
-	
-	/**
-	 * Metodo que ajusta la imagen al tamaño del label
-	 * @return
-	 */
-	
-//	**************************************************************************
-//	Toma una imagen por ahora de una carpeta local y ajusta su tamaño al de 
-//	label
-//	**************************************************************************
-
-	public ImageIcon Cargar_Imagen( int width , int height ) {
-		//C:\\Documents and Settings\\Administrador\\Escritorio\\carpeta de java\\Java\\Prueba GUI\\src\\MainPkg\\Images\\EscudoOK.jpg
-		
-		ImageIcon ImagenEscudoOKaux = new ImageIcon( getClass().getResource( "EscudoOK.jpg" ) );	
-		ImageIcon ImagenEscudoOK = new ImageIcon( ImagenEscudoOKaux.getImage().getScaledInstance( width , height , Image.SCALE_DEFAULT ) );
-		return ImagenEscudoOK;
-		
-	}
-	
 	
 	/**
 	 * Constructor de la ventana
@@ -117,6 +71,7 @@ public class Ventana_Login extends JDialog {
 		
 		setTitle( "OKbook 0.0.1" );
 		setBounds( 100 , 100 , 300 , 400 );
+		
 		
 		getContentPane().setLayout( new BorderLayout() );
 		contentPanel.setBorder( new EmptyBorder( 5 , 5 , 5 , 5 ) );
@@ -137,7 +92,7 @@ public class Ventana_Login extends JDialog {
 //		dentro de un menu 
 //		**************************************************************************		
 		
-		final JComboBox<?> comboboxUsuario = new JComboBox<Object>();
+		final JComboBox<String> comboboxUsuario = new JComboBox<String>();
 		comboboxUsuario.setEditable( true );
 		comboboxUsuario.setBounds( 100 , 207 , 137 , 20 );
 		contentPanel.add( comboboxUsuario );
@@ -154,9 +109,50 @@ public class Ventana_Login extends JDialog {
 		contentPanel.add( rbRecordarUsuario );
 		
 		JRadioButton rbRecordarContraseña = new JRadioButton( "Recordar contrase\u00F1a" );
+		rbRecordarContraseña.setToolTipText("Su contrase\u00F1a quedar\u00E1 guardada");
 		rbRecordarContraseña.setFont( new Font ( "Tahoma" , Font.PLAIN , 10 ) );
 		rbRecordarContraseña.setBounds( 100 , 291 , 137 , 23 );
 		contentPanel.add( rbRecordarContraseña );
+		
+	
+//		**************************************************************************
+//		Label-boton, cambia de fuente cuando entra y sale el mouse y es clickeable
+//		**************************************************************************	
+		
+		final JLabel labelRegistro = new JLabel("\u00BFNo est\u00E1 registrado?");
+		labelRegistro.setToolTipText("Presione aca para registrarse");
+		labelRegistro.setFont( new Font( "Tahoma" , Font.PLAIN, 11));
+		labelRegistro.setBounds(10, 313, 99, 20);
+		contentPanel.add(labelRegistro);
+		
+		labelRegistro.addMouseListener(  new MouseListener () {
+
+			@Override public void mouseReleased(MouseEvent arg0) {}
+			
+			@Override public void mousePressed(MouseEvent arg0) {}
+			
+			@Override public void mouseExited(MouseEvent arg0) {
+				
+				labelRegistro.setFont( new Font( "Tahoma" , Font.PLAIN, 11));
+				labelRegistro.setForeground( new Color( 0, 0, 0 ) );
+				
+			}
+			
+			@Override public void mouseEntered(MouseEvent arg0) {
+				
+				labelRegistro.setFont(new Font("Tahoma", Font.ITALIC, 11));
+				labelRegistro.setForeground(new Color(0, 0, 153));
+			}
+			
+			public void mouseClicked(MouseEvent arg0) {
+				
+				setVisible( false );
+				removeAll();
+				Ventana_Registro.Crear_Ventana_Registro();
+				
+			}
+		
+		} );
 		
 //		**************************************************************************
 //		Creacion de los labels con texto, nuff said
@@ -164,13 +160,13 @@ public class Ventana_Login extends JDialog {
 		
 		JLabel labelUsuario = new JLabel( "Usuario:" );
 		labelUsuario.setFont( new Font ( "Tahoma" , Font.PLAIN , 10 ) );
-		labelUsuario.setBounds( 50 , 210 , 40 , 17 );
+		labelUsuario.setBounds( 50 , 209 , 40 , 17 );
 		contentPanel.add( labelUsuario );
 		
 		
 		JLabel labelContraseña = new JLabel( "Contrase\u00F1a:" );
 		labelContraseña.setFont( new Font ( "Tahoma" , Font.PLAIN , 10 ) );
-		labelContraseña.setBounds( 30 , 267 , 60 , 17 );
+		labelContraseña.setBounds( 29 , 266 , 60 , 17 );
 		contentPanel.add( labelContraseña );
 		
 //		**************************************************************************
@@ -180,8 +176,10 @@ public class Ventana_Login extends JDialog {
 		
 		JLabel labelImagenEscudo = new JLabel( "" );
 		labelImagenEscudo.setBounds( 72 , 21 , 137 , 131 );
-		labelImagenEscudo.setIcon( Cargar_Imagen( labelImagenEscudo.getWidth() , labelImagenEscudo.getHeight() ) );
+		labelImagenEscudo.setIcon( Ventana_Login_Utilidad.Cargar_Imagen( labelImagenEscudo.getWidth() , labelImagenEscudo.getHeight() , 
+																		 getClass().getResource( "EscudoOK.jpg" ) ) );
 		contentPanel.add( labelImagenEscudo );
+		
 		
 		
 		
@@ -197,49 +195,51 @@ public class Ventana_Login extends JDialog {
 			
 			{
 				
-				okbuttonOK = new JButton( "OK" );
+				buttonOK = new JButton( "OK" );
 				
 //				**************************************************************************
 //				Cuando se apreta el OK - se confirma la contraseña
 //				**************************************************************************	
 					
-				okbuttonOK.addActionListener( new ActionListener() {
+				buttonOK.addActionListener( new ActionListener() {
 					public void actionPerformed( ActionEvent e ) {
 						
 						String usuario = (String) comboboxUsuario.getSelectedItem();
-						confirmar_contraseña( usuario );
+						Ventana_Login_Utilidad.confirmar_contraseña( usuario , passwordfieldContraseña.getPassword() );
 						
 					}
 				} ) ;
 				
-				okbuttonOK.setActionCommand( "OK" );
-				buttonPane.add( okbuttonOK );
-				getRootPane().setDefaultButton( okbuttonOK );
+				buttonOK.setActionCommand( "OK" );
+				buttonPane.add( buttonOK );
+				getRootPane().setDefaultButton( buttonOK );
 				
 			}
 			
 			{
-				cancelbuttonSalir = new JButton( "Salir" );
+				buttonSalir = new JButton( "Salir" );
+				buttonSalir.setToolTipText("Salir del programa");
 				
 //				**************************************************************************
 //				El de salir es un poco mas rebuscado, espero que se den cuenta solos
 //				**************************************************************************	
 				
-				cancelbuttonSalir.addActionListener( new ActionListener() {
+				buttonSalir.addActionListener( new ActionListener() {
 					public void actionPerformed( ActionEvent e ) {
 						
-						System.exit(0);
+						setVisible( false );
+						removeAll();
 						
 					}
 				} ) ;
 				
-				cancelbuttonSalir.setActionCommand( "Cancel" );
-				buttonPane.add( cancelbuttonSalir );
+				buttonSalir.setActionCommand( "Cancel" );
+				buttonPane.add( buttonSalir );
 			}
 		}
 		
-//		setFocusTraversalPolicy( new FocusTraversalPolicy( new Component[]{ getContentPane(), contentPanel 
-//								, buttonPane , okbuttonOK , cancelbuttonSalir , passwordfieldContraseña } ) );
+		setFocusTraversalPolicy ( new FocusTraversalOnArray( new Component[]{ getContentPane(), contentPanel 
+								, buttonPane , buttonOK , buttonSalir , passwordfieldContraseña , labelRegistro } ) );
 		
 		
 	} //Fin Ventana_Contraseña
