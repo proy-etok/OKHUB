@@ -15,7 +15,7 @@ public class Sesion
     private Statement st = null;
     private ResultSet rs = null;
     
-	public OKHConn()
+	public void Sesion()
 	{
 		
 		
