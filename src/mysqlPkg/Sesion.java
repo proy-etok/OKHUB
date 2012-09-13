@@ -15,7 +15,7 @@ public class Sesion
     private Statement st = null;
     private ResultSet rs = null;
     
-	public void Sesion()
+	public Sesion()
 	{
 		
 		

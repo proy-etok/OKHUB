@@ -1,5 +1,6 @@
 package mainPkg;
 
+import mysqlPkg.Sesion;
 import GUIPkg.*;
 
 
@@ -14,9 +15,6 @@ public class Application
 	{
 		
 		Ventana_Login.Crear_Ventana_Login();
-		
-	
-		
 	}
 
 }
