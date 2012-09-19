@@ -10,35 +10,6 @@ import javax.swing.JOptionPane;
 public class Ventana_Login_Utilidad {
 	
 	/**
-	 * Metodo de confirmacion de contraseña
-	 * @param usuario 
-	 */
-	
-//	**************************************************************************
-//	Metodo de ejemplo que confirma la contraseña - mas adelante se le deberá 
-//	aplicar la parte de la base de datos
-//	**************************************************************************
-	
-	public static void confirmar_contraseña ( String usuario , char[] contraseña ) {
-		
-		
-		String contraseñaString = "";
-		for ( char simbolo : contraseña )
-			contraseñaString += simbolo;						
-	
-		if ( contraseñaString.contentEquals( "12341234" ) && usuario.contentEquals( "pepe" ) ) {
-			JOptionPane.showMessageDialog( null, "Cargando sus datos ..",
-					"Bienvenido", JOptionPane.INFORMATION_MESSAGE );
-			
-		}
-	
-		else {
-			JOptionPane.showMessageDialog( null, "Contraseña incorrecta",
-					"Error", JOptionPane.INFORMATION_MESSAGE );
-		}
-	}
-	
-	/**
 	 * Metodo que ajusta la imagen al tamaño del label
 	 * @return
 	 */

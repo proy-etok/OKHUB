@@ -26,30 +26,40 @@ import javax.swing.JComboBox;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.Color;
+import java.awt.Toolkit;
 //import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 //*los imports comentados el ecplipse me los marcó con error 
 //cuando movi el .java a la carpeta del proyecto. Hay que ver 
 //que onda
 
+/**
+ * @author GSeva
+ * @version 0.0.1
+ * @see Ventana_Login_Utilidad
+ * 
+ * Clase de creacion de ventana de login
+ * 
+ * */
+
 public class Ventana_Login extends JDialog {
 
-
+	Conector_Mysql mc = new Conector_Mysql();
 	private final JPanel contentPanel = new JPanel();
 	private JPasswordField passwordfieldContraseña;
 	private JPanel buttonPane;
 	private JButton buttonOK;
 	private JButton buttonSalir;
+	
 
 	/**
-	 * @author GSeva
 	 * Metodo de llamada al constructor de ventana
 	 * @return 
 	 */
 
 	public Ventana_Login dialog;
 	
-	public static void Crear_Ventana_Login () {
+	public void Crear_Ventana_Login () {
 		
 		try {
 			Ventana_Login dialog = new Ventana_Login();
@@ -67,6 +77,7 @@ public class Ventana_Login extends JDialog {
 	
 	
 	public Ventana_Login() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Login.class.getResource("/guiPkg/EscudoOK.JPG")));
 		
 		
 		setTitle( "OKbook 0.0.1" );
@@ -140,15 +151,15 @@ public class Ventana_Login extends JDialog {
 			
 			@Override public void mouseEntered(MouseEvent arg0) {
 				
-				labelRegistro.setFont(new Font("Tahoma", Font.ITALIC, 11));
-				labelRegistro.setForeground(new Color(0, 0, 153));
+				labelRegistro.setFont( new Font("Tahoma", Font.ITALIC, 11));
+				labelRegistro.setForeground( new Color( 0 , 0 , 153 ) );
 			}
 			
 			public void mouseClicked(MouseEvent arg0) {
 				
-				setVisible( false );
-				removeAll();
-				Ventana_Registro.Crear_Ventana_Registro();
+				dispose();
+				Ventana_Registro_Utilidad vru = new Ventana_Registro_Utilidad();
+				vru.Crear_Ventana_Registro();
 				
 			}
 		
@@ -200,16 +211,18 @@ public class Ventana_Login extends JDialog {
 //				**************************************************************************
 //				Cuando se apreta el OK - se confirma la contraseña
 //				**************************************************************************	
-					
+						
 				buttonOK.addActionListener( new ActionListener() {
 					public void actionPerformed( ActionEvent e ) {
-						
-						String usuario = (String) comboboxUsuario.getSelectedItem();
-						Ventana_Login_Utilidad.confirmar_contraseña( usuario , passwordfieldContraseña.getPassword() );
-						
+							
+						System.out.println( comboboxUsuario.getSelectedItem().toString() + String.valueOf( passwordfieldContraseña.getPassword()));
+						if ( !mc.verificar_usuario( comboboxUsuario.getSelectedItem().toString() , String.valueOf( passwordfieldContraseña.getPassword() ) ) )
+							JOptionPane.showMessageDialog( null, "Usuario o contraseña incorrectos" ,
+									"Error", JOptionPane.INFORMATION_MESSAGE);
+								
 					}
 				} ) ;
-				
+						
 				buttonOK.setActionCommand( "OK" );
 				buttonPane.add( buttonOK );
 				getRootPane().setDefaultButton( buttonOK );
@@ -227,8 +240,7 @@ public class Ventana_Login extends JDialog {
 				buttonSalir.addActionListener( new ActionListener() {
 					public void actionPerformed( ActionEvent e ) {
 						
-						setVisible( false );
-						removeAll();
+						dispose();
 						
 					}
 				} ) ;

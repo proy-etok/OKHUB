@@ -12,11 +12,11 @@ public class Application
 	 */
 	public static void main(String[] args) 
 	{
-		
-		Ventana_Login.Crear_Ventana_Login();
-		
-	
-		
+		(new Ventana_Login()).Crear_Ventana_Login();
+		/*
+		Ventana_Login vl = new Ventana_Login();
+		vl.Crear_Ventana_Login();
+		*/
 	}
 
 }
