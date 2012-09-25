@@ -23,7 +23,8 @@ public class Conector_Mysql {
 		try {
 			
 			
-			conexion = DriverManager.getConnection( "jdbc:mysql://3hb.com.ar:3306/okhub" , "root" , "1234");
+//			conexion = DriverManager.getConnection( "jdbc:mysql://3hb.com.ar:3306/okhub" , "root" , "1234");
+			conexion = DriverManager.getConnection( "jdbc:mysql://localhost:3306/okhub" , "root" , "1234");
 			System.out.println( "conexion exitosa" );
 	        
 		

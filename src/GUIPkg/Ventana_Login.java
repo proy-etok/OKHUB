@@ -19,6 +19,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
+
+import dataPkg.dataLogin;
+
 import java.awt.Component;
 import javax.swing.JRadioButton;
 import javax.swing.ImageIcon;
@@ -45,11 +48,16 @@ import java.awt.Toolkit;
 public class Ventana_Login extends JDialog {
 
 	Conector_Mysql mc = new Conector_Mysql();
-	private final JPanel contentPanel = new JPanel();
-	private JPasswordField passwordfieldContraseña;
-	private JPanel buttonPane;
-	private JButton buttonOK;
-	private JButton buttonSalir;
+	final JPanel contentPanel = new JPanel();
+	JPasswordField passwordfieldContraseña;
+	JPanel buttonPane;
+	JButton buttonOK;
+	JButton buttonSalir;
+	JRadioButton rbRecordarUsuario;
+	JRadioButton rbRecordarContraseña;
+	
+	final JComboBox<String> comboboxUsuario;
+	
 	
 
 	/**
@@ -58,17 +66,6 @@ public class Ventana_Login extends JDialog {
 	 */
 
 	public Ventana_Login dialog;
-	
-	public void Crear_Ventana_Login () {
-		
-		try {
-			Ventana_Login dialog = new Ventana_Login();
-			dialog.setDefaultCloseOperation( JDialog.DISPOSE_ON_CLOSE );
-			dialog.setVisible( true );
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-	}
 			
 	
 	/**
@@ -103,9 +100,14 @@ public class Ventana_Login extends JDialog {
 //		dentro de un menu 
 //		**************************************************************************		
 		
-		final JComboBox<String> comboboxUsuario = new JComboBox<String>();
+		comboboxUsuario = new JComboBox<String>();
 		comboboxUsuario.setEditable( true );
 		comboboxUsuario.setBounds( 100 , 207 , 137 , 20 );
+		String usuarios = dataLogin.devolver_listaUsuarios();
+		System.out.println( usuarios );
+		
+		for ( String s : usuarios.split( " " ) )
+			comboboxUsuario.addItem( s );
 		contentPanel.add( comboboxUsuario );
 		
 		
@@ -114,12 +116,12 @@ public class Ventana_Login extends JDialog {
 //		para que se guarden las usuario/contraseña para el proximo login
 //		**************************************************************************		
 		
-		JRadioButton rbRecordarUsuario = new JRadioButton( "Recordar usuario" );
+		rbRecordarUsuario = new JRadioButton( "Recordar usuario" );
 		rbRecordarUsuario.setFont( new Font ( "Tahoma" , Font.PLAIN , 10 ) );
 		rbRecordarUsuario.setBounds( 100 , 234 , 109 , 23 );
 		contentPanel.add( rbRecordarUsuario );
 		
-		JRadioButton rbRecordarContraseña = new JRadioButton( "Recordar contrase\u00F1a" );
+		rbRecordarContraseña = new JRadioButton( "Recordar contrase\u00F1a" );
 		rbRecordarContraseña.setToolTipText("Su contrase\u00F1a quedar\u00E1 guardada");
 		rbRecordarContraseña.setFont( new Font ( "Tahoma" , Font.PLAIN , 10 ) );
 		rbRecordarContraseña.setBounds( 100 , 291 , 137 , 23 );
@@ -212,16 +214,7 @@ public class Ventana_Login extends JDialog {
 //				Cuando se apreta el OK - se confirma la contraseña
 //				**************************************************************************	
 						
-				buttonOK.addActionListener( new ActionListener() {
-					public void actionPerformed( ActionEvent e ) {
-							
-						System.out.println( comboboxUsuario.getSelectedItem().toString() + String.valueOf( passwordfieldContraseña.getPassword()));
-						if ( !mc.verificar_usuario( comboboxUsuario.getSelectedItem().toString() , String.valueOf( passwordfieldContraseña.getPassword() ) ) )
-							JOptionPane.showMessageDialog( null, "Usuario o contraseña incorrectos" ,
-									"Error", JOptionPane.INFORMATION_MESSAGE);
-								
-					}
-				} ) ;
+				
 						
 				buttonOK.setActionCommand( "OK" );
 				buttonPane.add( buttonOK );

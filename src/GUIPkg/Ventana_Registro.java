@@ -223,7 +223,7 @@ public class Ventana_Registro extends JDialog {
 					public void actionPerformed(ActionEvent arg0) {
 						
 						dispose();
-						Ventana_Login vl = new Ventana_Login();
+						Ventana_Login_Utilidad vl = new Ventana_Login_Utilidad();
 						vl.Crear_Ventana_Login();
 						
 						

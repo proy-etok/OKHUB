@@ -110,13 +110,6 @@ public class Ventana_Registro_Utilidad extends Ventana_Registro {
 		
 	}
 	
-	
-	/**
-	 * Metodo de verificacion de registro. Se llama cuando se apreta el boton de registro.
-	 * 
-	 * 
-	 * */
-	
 	public void Verificar_Datos_Registro ( ) 
 	{
 		vrv.Verificar_Datos_Usuario( textFieldUsuario.getText() );
