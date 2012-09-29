@@ -7,7 +7,7 @@ import java.net.URLConnection;
 
 public class PHPConnector {
 	
-	private static String conStrURL = "http://okhub.net76.net/huber/index.php?";
+	private static String conStrURL = "http://okhub.net76.net/Nikita/index.php?";
 
 	
 	  public static String funcion_PHP(String f)

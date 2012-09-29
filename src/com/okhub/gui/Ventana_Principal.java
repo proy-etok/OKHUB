@@ -1,7 +1,6 @@
 package com.okhub.gui;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import java.awt.Toolkit;
@@ -14,14 +13,20 @@ import javax.swing.JTabbedPane;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import com.okhub.oho.interfaz.Sesion;
+import com.okhub.pizarron.PizarronPanel;
+
 import net.miginfocom.swing.MigLayout;
 
 public class Ventana_Principal {
@@ -29,29 +34,20 @@ public class Ventana_Principal {
 	JFrame frame;
 	JList<String> list;
 	JTabbedPane tabbedPane;
-	
+	JTextField prueba;
+	JButton botonRefrescar;
 
-	/**
-	 * Launch the application.
-	 */
-	public void Crear_Ventana_Principal() {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Ventana_Principal window = new Ventana_Principal();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private Sesion Ses = null;
+
 
 	/**
 	 * Create the application.
 	 */
-	public Ventana_Principal() {
+	public Ventana_Principal(Sesion S) {
+		
+		Ses = S;
 		initialize();
+		
 	}
 
 	/**
@@ -62,6 +58,43 @@ public class Ventana_Principal {
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Principal.class.getResource("/com/okhub/gui/EscudoOK.JPG")));
 		frame.setBounds(100, 100, 639, 450);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.addWindowListener( new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void windowIconified(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void windowDeiconified(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void windowDeactivated(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				Ses.ponerOnline( Ses.getUserStr(), false );
+			}
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void windowActivated(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
@@ -74,77 +107,47 @@ public class Ventana_Principal {
 		
 		
 		frame.getContentPane().setLayout(new MigLayout("", "[300px,grow,fill][137px,growprio 50,grow,left]", "[315px,grow,fill]"));
-		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		tabbedPane.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		frame.getContentPane().add(tabbedPane, "cell 0 0,grow");
 		
 		JPanel panelInicio = new JPanel();
+		prueba = new JTextField();
+		prueba.setEditable(false);
+		prueba.setText( Ses.getUserStr() );
+		panelInicio.add( prueba, "center");
 		tabbedPane.addTab("Inicio", null, panelInicio, null);
+		
+		tabbedPane.addTab("Pizarron", new PizarronPanel(Ses));
 		
 		JPanel friendsPane = new JPanel();
 		friendsPane.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		frame.getContentPane().add(friendsPane, "cell 1 0,grow");
-		friendsPane.setLayout(null);
-		
-		String[] nombres = new String[] {"Josue", "Jorge", "Rolando", "wachin" , "Jorge2" , "jorge3","jorge4", "jorge5"};
-		list = new JList<String>();
-		list.setListData( nombres );
-		
-		
-//		list.get
-		
-		list.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		list.setBounds(10, 38, 117, 332);
-		friendsPane.add(list);
+		MigLayout mlf = new MigLayout( "","grow,fill","[][grow,fill]");
+		friendsPane.setLayout(mlf);
 		
 		JMenu menu = new JMenu("Menu");
-		menu.setBounds(10, 11, 70, 19);
-		friendsPane.add(menu);
+//		menu.setBounds(10, 11, 70, 19);
 		JMenuItem menuItem = new JMenuItem("File");
 		menu.add(menuItem);
 		JMenuItem menuItem_1 = new JMenuItem("Hola");
 		menu.add(menuItem_1);
+		friendsPane.add(menu , "top,growx,split 2");
+		
+		botonRefrescar = new JButton("R");
+		friendsPane.add( botonRefrescar , "wrap");
+		
+		list = new JList<String>();
+		list.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		list.setValueIsAdjusting(true);    
+		JScrollPane scroll = new JScrollPane(list);
+		scroll.setViewportView(list);
+		friendsPane.add( scroll, "grow,center");
+		
 		
 
-		list.addMouseListener( new MouseAdapter( ) {
-			public void mouseClicked ( MouseEvent e ){
-				
-				if ( e.getClickCount() == 2 ) {
-					
-					String title = list.getSelectedValue();
-					while( !existeConversacion( tabbedPane, title ) ){
-						MigLayout ml = new MigLayout("","grow,fill","[80%|20%]");
-						JPanel panel = new JPanel( ml );
-						final JTextArea chat = new JTextArea();
-						chat.setEditable(false);
-						JScrollPane scroll = new JScrollPane(chat,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-						panel.add( scroll , "grow,wrap" );
-						final JTextField tfenviar = new JTextField( "" );
-						panel.add( tfenviar , "split 2, bottom, growx" );
-						JButton jbenviar = new JButton("Enviar");
-						panel.add( jbenviar , "bottom");
-						tabbedPane.addTab( title , panel );
-						jbenviar.addActionListener( new ActionListener() {
-							
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							if ( !tfenviar.getText().equals( "" ) )
-								chat.append( "yo: " + tfenviar.getText() + "\n" );
-							tfenviar.setText("");
-							}
-						});
-					}
-					tabbedPane.setSelectedIndex( tabbedPane.indexOfTab(title));
-					JPanel panelTop = new JPanel();
-					agregar_botonX( panelTop, tabbedPane , title );
-						
-					
-				}
-				
-			}
-		});
+		
 		
 		miHola.addMouseListener(new MouseAdapter() {
 			@Override 

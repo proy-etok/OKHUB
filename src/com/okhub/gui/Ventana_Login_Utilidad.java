@@ -1,8 +1,12 @@
 package com.okhub.gui;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -20,6 +24,7 @@ public class Ventana_Login_Utilidad extends Ventana_Login {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private Sesion Ses = new Sesion();
 
 	/**
 	 * Metodo de confirmacion de contraseña
@@ -38,6 +43,43 @@ public void Crear_Ventana_Login () {
 
 	public Ventana_Login_Utilidad () {
 		
+		labelRegistro.addMouseListener(  new MouseListener () {
+
+			@Override public void mouseReleased(MouseEvent arg0) {}
+			
+			@Override public void mousePressed(MouseEvent arg0) {}
+			
+			@Override public void mouseExited(MouseEvent arg0) {
+				
+				labelRegistro.setFont( new Font( "Tahoma" , Font.PLAIN, 11));
+				labelRegistro.setForeground( new Color( 0, 0, 0 ) );
+				
+			}
+			
+			@Override public void mouseEntered(MouseEvent arg0) {
+				
+				labelRegistro.setFont( new Font("Tahoma", Font.ITALIC, 11));
+				labelRegistro.setForeground( new Color( 0 , 0 , 153 ) );
+			}
+			
+			public void mouseClicked(MouseEvent arg0) {
+				
+				dispose();
+				Ventana_Registro_Utilidad vru = new Ventana_Registro_Utilidad();
+				vru.Crear_Ventana_Registro();
+				
+			}
+		
+		} );
+		
+		buttonSalir.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				
+				dispose();
+				
+			}
+		} ) ;
+		
 		buttonOK.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				
@@ -50,14 +92,18 @@ public void Crear_Ventana_Login () {
 				
 				
 				System.out.println( comboboxUsuario.getSelectedItem().toString() + String.valueOf( passwordfieldContraseña.getPassword()));
-				if ( !Sesion.comprobarPassword( comboboxUsuario.getSelectedItem().toString() , 
-									String.valueOf( passwordfieldContraseña.getPassword() ) ) )
+				if ( !Ses.iniciarSesion( comboboxUsuario.getSelectedItem().toString() , 
+									String.valueOf( passwordfieldContraseña.getPassword() ) ) ) 
 					JOptionPane.showMessageDialog( null, "Usuario o contraseña incorrectos" ,
 							"Error", JOptionPane.INFORMATION_MESSAGE);
-				else
+					
+					
+				else {
 					JOptionPane.showMessageDialog( null, "Logeadisimo" ,
 						"Bienvenido", JOptionPane.INFORMATION_MESSAGE);
-						
+						Ventana_Principal_Utilidad.Crear_Ventana_Principal(Ses);
+					dispose();					
+				}
 			}
 		} ) ;
 		

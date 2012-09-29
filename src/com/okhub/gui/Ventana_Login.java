@@ -7,20 +7,13 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import com.okhub.data.dataLogin;
-
-
 import java.awt.Component;
 import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
 import java.awt.Font;
-import java.awt.Color;
 import java.awt.Toolkit;
 //import com.jgoodies.forms.factories.DefaultComponentFactory;
 
@@ -52,6 +45,8 @@ public class Ventana_Login extends JDialog {
 	JRadioButton rbRecordarContraseña;
 	
 	final JComboBox<String> comboboxUsuario;
+	JLabel labelRegistro;
+	
 	
 	
 
@@ -127,40 +122,13 @@ public class Ventana_Login extends JDialog {
 //		Label-boton, cambia de fuente cuando entra y sale el mouse y es clickeable
 //		**************************************************************************	
 		
-		final JLabel labelRegistro = new JLabel("\u00BFNo est\u00E1 registrado?");
+		labelRegistro = new JLabel("\u00BFNo est\u00E1 registrado?");
 		labelRegistro.setToolTipText("Presione aca para registrarse");
 		labelRegistro.setFont( new Font( "Tahoma" , Font.PLAIN, 11));
 		labelRegistro.setBounds(10, 313, 99, 20);
 		contentPanel.add(labelRegistro);
 		
-		labelRegistro.addMouseListener(  new MouseListener () {
 
-			@Override public void mouseReleased(MouseEvent arg0) {}
-			
-			@Override public void mousePressed(MouseEvent arg0) {}
-			
-			@Override public void mouseExited(MouseEvent arg0) {
-				
-				labelRegistro.setFont( new Font( "Tahoma" , Font.PLAIN, 11));
-				labelRegistro.setForeground( new Color( 0, 0, 0 ) );
-				
-			}
-			
-			@Override public void mouseEntered(MouseEvent arg0) {
-				
-				labelRegistro.setFont( new Font("Tahoma", Font.ITALIC, 11));
-				labelRegistro.setForeground( new Color( 0 , 0 , 153 ) );
-			}
-			
-			public void mouseClicked(MouseEvent arg0) {
-				
-				dispose();
-				Ventana_Registro_Utilidad vru = new Ventana_Registro_Utilidad();
-				vru.Crear_Ventana_Registro();
-				
-			}
-		
-		} );
 		
 //		**************************************************************************
 //		Creacion de los labels con texto, nuff said
@@ -224,14 +192,6 @@ public class Ventana_Login extends JDialog {
 //				**************************************************************************
 //				El de salir es un poco mas rebuscado, espero que se den cuenta solos
 //				**************************************************************************	
-				
-				buttonSalir.addActionListener( new ActionListener() {
-					public void actionPerformed( ActionEvent e ) {
-						
-						dispose();
-						
-					}
-				} ) ;
 				
 				buttonSalir.setActionCommand( "Cancel" );
 				buttonPane.add( buttonSalir );

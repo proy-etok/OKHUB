@@ -2,6 +2,7 @@ package com.okhub.data;
 
 
 import com.google.gson.*;
+import com.okhub.oho.interfaz.Mensaje;
 import com.okhub.oho.interfaz.User;
 
 public class JSON
@@ -39,7 +40,21 @@ public class JSON
 		
 	}
 	
-	public static void main(String[] args) throws Exception	
+	public static Mensaje[] getMsgArray ( String mensajesStr ) {
+		
+		Gson g = new Gson();
+		return g.fromJson( mensajesStr, Mensaje[].class);
+		
+	}
+	
+	public static String getMsgStringArray ( Mensaje[] mensajes ) {
+		
+		Gson g = new Gson();
+		return g.toJson( mensajes );
+		
+	}
+	
+/*public static void main(String[] args) throws Exception	
 	{
 		User u1 = new User();
 		User u2 = new User( "josue","josue@mail.com",20);
@@ -71,6 +86,6 @@ public class JSON
 		User[] arrayU2 = getUserArray(getUserStringArray(arrayU));
 		
 		System.out.println(arrayU2[1].nombre);
-	}
+	}*/
 
 }
