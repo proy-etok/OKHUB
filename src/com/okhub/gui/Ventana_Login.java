@@ -64,11 +64,11 @@ public class Ventana_Login extends JDialog {
 	
 	
 	public Ventana_Login() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Login.class.getResource("/com/okhub/gui/EscudoOK.JPG")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Login.class.getResource("/com/okhub/gui/EscudoOK.PNG")));
 		
 		
 		setTitle( "OKbook 0.0.1" );
-		setBounds( 100 , 100 , 300 , 400 );
+		setBounds( 100 , 100 , 300 , 420 );
 		
 		
 		getContentPane().setLayout( new BorderLayout() );
@@ -125,7 +125,7 @@ public class Ventana_Login extends JDialog {
 		labelRegistro = new JLabel("\u00BFNo est\u00E1 registrado?");
 		labelRegistro.setToolTipText("Presione aca para registrarse");
 		labelRegistro.setFont( new Font( "Tahoma" , Font.PLAIN, 11));
-		labelRegistro.setBounds(10, 313, 99, 20);
+		labelRegistro.setBounds(10, 321, 99, 20);
 		contentPanel.add(labelRegistro);
 		
 
@@ -153,7 +153,7 @@ public class Ventana_Login extends JDialog {
 		JLabel labelImagenEscudo = new JLabel( "" );
 		labelImagenEscudo.setBounds( 72 , 21 , 137 , 131 );
 		labelImagenEscudo.setIcon( Ventana_Login_Utilidad.Cargar_Imagen( labelImagenEscudo.getWidth() , labelImagenEscudo.getHeight() , 
-																		 getClass().getResource( "EscudoOK.jpg" ) ) );
+																		 getClass().getResource( "EscudoOK.PNG" ) ) );
 		contentPanel.add( labelImagenEscudo );
 		
 		

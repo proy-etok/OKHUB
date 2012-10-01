@@ -59,6 +59,7 @@ public class PHPConnector {
 	    	{
 	    		retorno += (line + "\n");
 	    		line = BffR.readLine();
+	    		line += "";
 	    		
 	    	}while(!line.contains("EOF"));
 	    	

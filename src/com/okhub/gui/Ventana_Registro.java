@@ -63,7 +63,7 @@ public class Ventana_Registro extends JDialog {
 	public Ventana_Registro() {
 		
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Registro.class.getResource("/com/okhub/gui/EscudoOK.JPG")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Registro.class.getResource("/com/okhub/gui/EscudoOK.PNG")));
 		
 		setResizable(false);
 		setTitle("Registro");
