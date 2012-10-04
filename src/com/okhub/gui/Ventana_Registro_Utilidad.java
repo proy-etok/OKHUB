@@ -47,6 +47,8 @@ public class Ventana_Registro_Utilidad extends Ventana_Registro {
 	
 	public Ventana_Registro_Utilidad() 
 	{
+		
+
 		System.out.printf( comboBoxSexo.getSelectedItem().toString() );
 		Agregar_Focus_Listener_textField( textFieldUsuario );
 		Agregar_Focus_Listener_textField( textFieldDirCorreo );

@@ -1,6 +1,7 @@
 package com.okhub.gui;
 
-import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import java.awt.Toolkit;
@@ -9,11 +10,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JButton;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -25,6 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import com.okhub.oho.interfaz.Sesion;
+import com.okhub.oho.interfaz.User;
 import com.okhub.pizarron.PizarronPanel;
 
 import net.miginfocom.swing.MigLayout;
@@ -32,11 +32,12 @@ import net.miginfocom.swing.MigLayout;
 public class Ventana_Principal {
 
 	JFrame frame;
-	JList<String> list;
 	JTabbedPane tabbedPane;
 	JTextField prueba;
-	JButton botonRefrescar;
+	Ventana_Principal_PanelAmigos friendsPane;
 
+	int indexTab;
+	
 	private Sesion Ses = null;
 
 
@@ -55,41 +56,23 @@ public class Ventana_Principal {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Principal.class.getResource("/com/okhub/gui/EscudoOK.PNG")));
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Principal.class.getResource("/com/okhub/gui/EscudoOK.png")));
 		frame.setBounds(100, 100, 639, 450);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addWindowListener( new WindowListener() {
 			
-			@Override
-			public void windowOpened(WindowEvent arg0) {
-				
-				
-			}
-			@Override
-			public void windowIconified(WindowEvent arg0) {
-				
-				
-			}
-			@Override
-			public void windowDeiconified(WindowEvent arg0) {
-				
-				
-			}
-			@Override
-			public void windowDeactivated(WindowEvent arg0) {
-				
-				
-			}
-			@Override
+			@Override public void windowOpened(WindowEvent arg0) {}
+			@Override public void windowIconified(WindowEvent arg0) {}
+			@Override public void windowDeiconified(WindowEvent arg0) {}
+			@Override public void windowDeactivated(WindowEvent arg0) {}
+			@Override public void windowActivated(WindowEvent arg0) {}
+			@Override 
 			public void windowClosing(WindowEvent arg0) {
 				Ses.ponerOnline( Ses.getUserStr(), false );
 			}
 			@Override
 			public void windowClosed(WindowEvent arg0) {
-				
-			}
-			@Override
-			public void windowActivated(WindowEvent arg0) {
+				Ses.ponerOnline( Ses.getUserStr(), false );
 				
 			}
 		});
@@ -110,42 +93,12 @@ public class Ventana_Principal {
 		tabbedPane.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		frame.getContentPane().add(tabbedPane, "cell 0 0,grow");
 		
-		JPanel panelInicio = new JPanel();
-		prueba = new JTextField();
-		prueba.setEditable(false);
-		prueba.setText( Ses.getUserStr() );
-		panelInicio.add( prueba, "center");
-		tabbedPane.addTab("Inicio", null, panelInicio, null);
-		
+		agregar_PanelInicio();
 		tabbedPane.addTab("Pizarron", new PizarronPanel(Ses));
+		tabbedPane.setSelectedIndex(tabbedPane.indexOfTab("Inicio"));
 		
-		JPanel friendsPane = new JPanel();
-		friendsPane.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		friendsPane = new Ventana_Principal_PanelAmigos( Ses );
 		frame.getContentPane().add(friendsPane, "cell 1 0,grow");
-		MigLayout mlf = new MigLayout( "","grow,fill","[][grow,fill]");
-		friendsPane.setLayout(mlf);
-		
-		JMenu menu = new JMenu("Menu");
-//		menu.setBounds(10, 11, 70, 19);
-		JMenuItem menuItem = new JMenuItem("File");
-		menu.add(menuItem);
-		JMenuItem menuItem_1 = new JMenuItem("Hola");
-		menu.add(menuItem_1);
-		friendsPane.add(menu , "top,growx,split 2");
-		
-		botonRefrescar = new JButton("R");
-		friendsPane.add( botonRefrescar , "wrap");
-		
-		list = new JList<String>();
-		list.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		list.setValueIsAdjusting(true);    
-		JScrollPane scroll = new JScrollPane(list);
-		scroll.setViewportView(list);
-		friendsPane.add( scroll, "grow,center");
-		
-		
-
-		
 		
 		miHola.addMouseListener(new MouseAdapter() {
 			@Override 
@@ -177,28 +130,94 @@ public class Ventana_Principal {
 		
 	}
 	
-	public void agregar_botonX( final JPanel panel , final JTabbedPane tab , final String title ) {
+	public void agregar_botonX( final String title ) {
 		
-		final int index = tab.indexOfTab(title);
-		Color colorBack = tab.getBackground();
-		panel.setBackground( colorBack );
-		JButton botonX = new JButton( "x" );
-		MigLayout ml = new MigLayout( "" , "[fill][]" , "[]" );
-		panel.setLayout(ml);
+		indexTab = tabbedPane.indexOfTab(title);
+		JPanel panel = new JPanel();
+		JButton botonX = new JButton( "" );
+		botonX.setMaximumSize(new Dimension( 12 , 12));
+		botonX.setToolTipText("Cerrar la pestaña");
 		JLabel label = new JLabel(title);
-		label.setBackground( colorBack);
+		MigLayout ml = new MigLayout( "" , "[grow][15!]" , "[15!]" );
+		panel.setLayout(ml);
 		panel.add((label), "growx" );
 		panel.add((botonX), "right,top");
-		tab.setTabComponentAt( tab.getSelectedIndex() , panel );
+		tabbedPane.setTabComponentAt( indexTab , panel );
 		botonX.addActionListener( new ActionListener() {
 			
 			@Override
 			public void actionPerformed( ActionEvent arg0 ) {
-				for ( int i = 0 ; i < tab.getTabCount() ; i++ )
-					if( i == index )
-						tab.removeTabAt( i );
+				
+						tabbedPane.removeTabAt( tabbedPane.indexOfTab(title) );
 			}
 		});
+	}
+	
+	public void agregar_PanelInicio () {
+		
+		final JPanel panelInicio = new JPanel(new MigLayout("","[grow,fill]","[][fill,grow]"));
+		tabbedPane.addTab("Inicio", null, panelInicio, null);
+		prueba = new JTextField();
+		prueba.setEditable(false);
+		prueba.setText( Ses.getUserStr() );
+		panelInicio.add( prueba, "split 2,growx");
+		
+		JButton botonRefrescarInicio = new JButton( "R" );
+		botonRefrescarInicio.addActionListener( new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				tabbedPane.removeTabAt(tabbedPane.indexOfTab("Inicio"));
+				agregar_PanelInicio();
+			}
+		} );
+		
+		panelInicio.add( botonRefrescarInicio, "wrap");
+		
+		User[] amigosEspera = Ses.obtenerAmigosEspera();
+		if ( amigosEspera != null )
+		for (final User amigo : amigosEspera ) {
+			final JPanel panelAmigo = new JPanel(new MigLayout("","[grow]"));
+			JLabel labelAmigo = new JLabel( amigo.nombre );
+			JButton aceptarAmigo = new JButton( "Aceptar" );
+			JButton rechazarAmigo = new JButton( "Rechazar" );
+			
+			aceptarAmigo.addActionListener( new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if ( Ses.aceptarAmistad( amigo.nombre ) ) {
+						JOptionPane.showMessageDialog( panelAmigo , amigo.nombre + " agregadisimo" , "Felicitaciones!" , JOptionPane.INFORMATION_MESSAGE );
+						friendsPane.botonRefrescar.doClick();
+						panelAmigo.removeAll();
+						panelInicio.remove(panelAmigo);
+						panelInicio.repaint();
+					}
+				}
+			});
+			rechazarAmigo.addActionListener( new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if ( Ses.rechazarAmistad( amigo.nombre) ) {
+						JOptionPane.showMessageDialog( panelAmigo , amigo.nombre + " rechazadisimo" , "Felicitaciones!" , JOptionPane.INFORMATION_MESSAGE );
+						friendsPane.botonRefrescar.doClick();
+						panelAmigo.removeAll();
+						panelInicio.remove(panelAmigo);
+						panelInicio.repaint();
+					}
+				}
+			});
+			
+			panelAmigo.add(labelAmigo , "split 2 , grow");
+			panelAmigo.add(aceptarAmigo ,"split 2");
+			panelAmigo.add(rechazarAmigo);
+			
+			panelInicio.add(panelAmigo , "grow,wrap");
+			
+		}
+		
+		tabbedPane.setSelectedIndex( tabbedPane.indexOfTab("Inicio"));
 		
 		
 	}

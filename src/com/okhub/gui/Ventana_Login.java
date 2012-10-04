@@ -64,11 +64,11 @@ public class Ventana_Login extends JDialog {
 	
 	
 	public Ventana_Login() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Login.class.getResource("/com/okhub/gui/EscudoOK.PNG")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Login.class.getResource("/com/okhub/gui/EscudoOK.png")));
 		
 		
 		setTitle( "OKbook 0.0.1" );
-		setBounds( 100 , 100 , 300 , 420 );
+		setBounds( 100 , 100 , 300 , 400 );
 		
 		
 		getContentPane().setLayout( new BorderLayout() );
@@ -82,7 +82,7 @@ public class Ventana_Login extends JDialog {
 //		**************************************************************************		
 		
 		passwordfieldContraseña = new JPasswordField();
-		passwordfieldContraseña.setBounds( 100 , 264 , 137 , 20 );
+		passwordfieldContraseña.setBounds( 100 , 251 , 137 , 24 );
 		contentPanel.add( passwordfieldContraseña );
 		
 //		**************************************************************************
@@ -92,7 +92,7 @@ public class Ventana_Login extends JDialog {
 		
 		comboboxUsuario = new JComboBox<String>();
 		comboboxUsuario.setEditable( true );
-		comboboxUsuario.setBounds( 100 , 207 , 137 , 20 );
+		comboboxUsuario.setBounds( 100 , 190 , 137 , 24 );
 		String usuarios = dataLogin.devolver_listaUsuarios();
 		System.out.println( usuarios );
 		
@@ -108,13 +108,13 @@ public class Ventana_Login extends JDialog {
 		
 		rbRecordarUsuario = new JRadioButton( "Recordar usuario" );
 		rbRecordarUsuario.setFont( new Font ( "Tahoma" , Font.PLAIN , 10 ) );
-		rbRecordarUsuario.setBounds( 100 , 234 , 109 , 23 );
+		rbRecordarUsuario.setBounds( 100 , 221 , 109 , 23 );
 		contentPanel.add( rbRecordarUsuario );
 		
 		rbRecordarContraseña = new JRadioButton( "Recordar contrase\u00F1a" );
 		rbRecordarContraseña.setToolTipText("Su contrase\u00F1a quedar\u00E1 guardada");
 		rbRecordarContraseña.setFont( new Font ( "Tahoma" , Font.PLAIN , 10 ) );
-		rbRecordarContraseña.setBounds( 100 , 291 , 137 , 23 );
+		rbRecordarContraseña.setBounds( 100 , 282 , 137 , 23 );
 		contentPanel.add( rbRecordarContraseña );
 		
 	
@@ -125,7 +125,7 @@ public class Ventana_Login extends JDialog {
 		labelRegistro = new JLabel("\u00BFNo est\u00E1 registrado?");
 		labelRegistro.setToolTipText("Presione aca para registrarse");
 		labelRegistro.setFont( new Font( "Tahoma" , Font.PLAIN, 11));
-		labelRegistro.setBounds(10, 321, 99, 20);
+		labelRegistro.setBounds(10, 313, 99, 20);
 		contentPanel.add(labelRegistro);
 		
 
@@ -136,13 +136,13 @@ public class Ventana_Login extends JDialog {
 		
 		JLabel labelUsuario = new JLabel( "Usuario:" );
 		labelUsuario.setFont( new Font ( "Tahoma" , Font.PLAIN , 10 ) );
-		labelUsuario.setBounds( 50 , 209 , 40 , 17 );
+		labelUsuario.setBounds( 50 , 192 , 40 , 17 );
 		contentPanel.add( labelUsuario );
 		
 		
 		JLabel labelContraseña = new JLabel( "Contrase\u00F1a:" );
 		labelContraseña.setFont( new Font ( "Tahoma" , Font.PLAIN , 10 ) );
-		labelContraseña.setBounds( 29 , 266 , 60 , 17 );
+		labelContraseña.setBounds( 30 , 253 , 60 , 17 );
 		contentPanel.add( labelContraseña );
 		
 //		**************************************************************************
@@ -153,7 +153,7 @@ public class Ventana_Login extends JDialog {
 		JLabel labelImagenEscudo = new JLabel( "" );
 		labelImagenEscudo.setBounds( 72 , 21 , 137 , 131 );
 		labelImagenEscudo.setIcon( Ventana_Login_Utilidad.Cargar_Imagen( labelImagenEscudo.getWidth() , labelImagenEscudo.getHeight() , 
-																		 getClass().getResource( "EscudoOK.PNG" ) ) );
+																		 getClass().getResource( "EscudoOK.png" ) ) );
 		contentPanel.add( labelImagenEscudo );
 		
 		
