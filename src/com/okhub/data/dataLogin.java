@@ -45,7 +45,6 @@ public class dataLogin {
 			data = new RandomAccessFile( opciones_login , "rw" );
 			return true;
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
@@ -78,7 +77,7 @@ public class dataLogin {
 			System.out.println("EOF");
 			return false;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 			return false;
 		}
@@ -97,7 +96,7 @@ public class dataLogin {
 		try {
 			data.seek(0);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		

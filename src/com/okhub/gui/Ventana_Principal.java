@@ -55,29 +55,29 @@ public class Ventana_Principal {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Principal.class.getResource("/com/okhub/gui/EscudoOK.JPG")));
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Principal.class.getResource("/com/okhub/gui/EscudoOK.PNG")));
 		frame.setBounds(100, 100, 639, 450);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addWindowListener( new WindowListener() {
 			
 			@Override
 			public void windowOpened(WindowEvent arg0) {
-				// TODO Auto-generated method stub
+				
 				
 			}
 			@Override
 			public void windowIconified(WindowEvent arg0) {
-				// TODO Auto-generated method stub
+				
 				
 			}
 			@Override
 			public void windowDeiconified(WindowEvent arg0) {
-				// TODO Auto-generated method stub
+				
 				
 			}
 			@Override
 			public void windowDeactivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
+				
 				
 			}
 			@Override
@@ -86,12 +86,10 @@ public class Ventana_Principal {
 			}
 			@Override
 			public void windowClosed(WindowEvent arg0) {
-				// TODO Auto-generated method stub
 				
 			}
 			@Override
 			public void windowActivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
 				
 			}
 		});
