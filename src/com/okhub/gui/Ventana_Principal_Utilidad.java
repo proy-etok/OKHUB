@@ -1,5 +1,6 @@
 package com.okhub.gui;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -7,21 +8,23 @@ import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
 import net.miginfocom.swing.MigLayout;
 
 import com.okhub.oho.interfaz.Mensaje;
 import com.okhub.oho.interfaz.Sesion;
-import com.okhub.oho.interfaz.User;
 
 public class Ventana_Principal_Utilidad extends Ventana_Principal {
 	
 	Sesion S;
-	JTextArea chat;
 	JTextField tfenviar;
 	
 	/**
@@ -45,92 +48,134 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 		super(Ses);
 		this.S = Ses;
 		System.out.println( );
-		list.addMouseListener( new MouseAdapter( ) {
-			
-			public void mouseClicked ( MouseEvent e ){
-				
-				if ( e.getClickCount() == 2 ) {
-					
-					String[] title = list.getSelectedValue().split(" ");
-					while( !existeConversacion( tabbedPane, title[0] ) ){
-						agregarTabChat( title[0] );
-					}
-				}
-				
-			}
-		});
 		
-		actualizarListaAmigos( S.getUserStr() );
-		botonRefrescar.addActionListener( new ActionListener() {
+		friendsPane.botonRefrescar.addActionListener( new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				actualizarListaAmigos(S.getUserStr());
+				RefrescarListaAmigos();
 			}
 		});
-	}
-	
-	public void actualizarListaAmigos ( String usuario ) {
 		
-		User[] amigos = S.obtenerListaAmigos();
-		for (User u : amigos) {
-			System.out.println(u.nombre);
-			System.out.println(u.online);
-		}
-		if (amigos.length == 0) {
-			System.out.println("4ever alone");
-			return;
-		}
+		friendsPane.botonRefrescar.doClick();
 		
-		String[] amigosStr = new String[amigos.length];
-		
-		for ( int i = 0 ; i < amigos.length ; i++ ) {
-			amigosStr[i] = amigos[i].nombre + " ";
-			if ( amigos[i].online != 0 )
-				amigosStr[i] += "- Online";
-			else
-				amigosStr[i] += "- Offline";
-		}	
-		
-		list.setListData(amigosStr);
+		friendsPane.miAgregarAmigo.addActionListener( new ActionListener() {
 			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String input = JOptionPane.showInputDialog( friendsPane.menu , "Ingrese su nombre " , "Agregar amigo" , JOptionPane.QUESTION_MESSAGE );
+/*				if ( input.contains("@") )
+					if ( S.existeCorreo( input ) ) {
+						JOptionPane.showMessageDialog(menu, input + " Agregadisimo" , "Felicitaciones!" , JOptionPane.INFORMATION_MESSAGE );
+						return;
+					}*/
+				if ( S.existeUsuario( input ) ) {
+					S.agregarAmigo( input );
+					JOptionPane.showMessageDialog(friendsPane.menu, input + " Agregadisimo" , "Felicitaciones!" , JOptionPane.INFORMATION_MESSAGE );
+					RefrescarListaAmigos();
+					return;
+				}
+				
+				JOptionPane.showMessageDialog(friendsPane.menu, input + " no existe" , "Error" , JOptionPane.INFORMATION_MESSAGE );
+				
+			}
+		});
+
 	}
 	
-	public void actualizarListaMensajes ( String usuario , String amigo, JTextArea chat ){
+	
+	public void RefrescarListaAmigos (  ) {
+		JLabel[] amigosLbl = friendsPane.actualizarListaAmigos( S.obtenerListaAmigos() );
+		
+		if ( amigosLbl != null )
+		for ( final JLabel lbl : amigosLbl ) {
+			
+			lbl.addMouseListener( new MouseAdapter( ) {
+				
+				public void mouseClicked ( MouseEvent e ) {
+					
+					if ( e.getButton() == MouseEvent.BUTTON3 ) {
+						JPopupMenu popupMenu = new JPopupMenu();
+						JMenuItem miChat = new JMenuItem("Abrir chat");
+						miChat.addActionListener(new ActionListener() {
+							
+							public void actionPerformed(ActionEvent arg0) {
+								agregarTabChat( lbl.getText() );
+							}
+						});
+						popupMenu.add(miChat);
+						JMenuItem miEliminar = new JMenuItem("Eliminar Amigo");
+						miEliminar.addActionListener(new ActionListener() {
+							
+							public void actionPerformed(ActionEvent arg0) {
+								if ( S.rechazarAmistad( lbl.getText() ) )  {
+									JOptionPane.showMessageDialog( lbl , lbl.getText() + " eliminadisimo"   , "Tenes un amigo menos" , JOptionPane.INFORMATION_MESSAGE );
+									RefrescarListaAmigos();
+								}
+							}
+						});
+						popupMenu.add(miEliminar);
+						
+						popupMenu.show(lbl, e.getX(), e.getY() );
+						
+					}
+					if ( e.getClickCount() == 2 ) {
+						
+						agregarTabChat( lbl.getText() );
+					}
+				}
+				
+				public void mousePressed (MouseEvent e){
+					
+					lbl.setForeground( Color.blue );
+					
+				}
+				
+				public void mouseReleased (MouseEvent e){
+					lbl.setForeground( Color.black );
+				}
+			} );
+		}
+		
+		friendsPane.friendsList.repaint();
+	}
+	
+	public void actualizarListaMensajes ( String amigo, JTextPane chat ){
 		
 		Mensaje[] mensajes = S.obtenerListaMensaje( amigo );
 		String mensaje = "";
 		if ( mensajes.length == 0 ) return;
 		
 		chat.setText("");
+		for ( int i = mensajes.length - 1 ; i > -1 ; i-- ) {
+	
+			mensaje += mensajes[i].origen + " [" ;
+			mensaje += mensajes[i].hora + "] : \n";
+			mensaje += ">>" + mensajes[i].mensaje + "\n";
+	
+			System.out.println(mensajes[i].destino);
+			System.out.println(S.getUser());
+			if ( mensajes[i].destino.toLowerCase().contentEquals( S.getUserStr().toLowerCase() ) ) {
+				S.acusarRecibo( mensajes[i].origen , mensajes[i].hora );
+				mensajes[i].recibido = 1;
+			}	
 		
-			for ( int i = mensajes.length - 1 ; i > -1 ; i-- ) {
-		
-				mensaje += mensajes[i].origen + " [" ;
-				mensaje += mensajes[i].hora + "] : \n";
-				mensaje += "   " + mensajes[i].mensaje + "\n";
-		
-				chat.append( mensaje );
-				System.out.println(mensajes[i].destino);
-				System.out.println(S.getUser());
-				if ( mensajes[i].destino.toLowerCase().contentEquals( S.getUserStr().toLowerCase() ) ) {
-					S.acusarRecibo( mensajes[i].origen , mensajes[i].hora );
-					mensajes[i].recibido = 1;
-				}	
-			
-			mensaje = "";
+		chat.setText( mensaje );
 		}
 		
 	}
 	
 	public void agregarTabChat ( final String title )
 	{
+		if ( existeConversacion(tabbedPane, title ) ){
+			tabbedPane.setSelectedIndex( tabbedPane.indexOfTab(title) );
+			return;
+		}
 		MigLayout ml = new MigLayout("","grow,fill","[80%|20%]");
 		JPanel panel = new JPanel( ml );
-		chat = new JTextArea();
+		final JTextPane chat = new JTextPane();
 		chat.setEditable(false);
-		chat.setLineWrap(true);
-		JScrollPane scroll = new JScrollPane(chat,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane scroll = new JScrollPane( chat , JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED );
 		panel.add( scroll , "grow,wrap" );
 		tfenviar = new JTextField( "" );
 		panel.add( tfenviar , "split 3, bottom, growx" );
@@ -143,18 +188,17 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if ( !tfenviar.getText().equals( "" ) )
-				if ( S.enviarMensaje( title , tfenviar.getText() ) );
+				S.enviarMensaje( title , tfenviar.getText() );
 			}
 		});
 		jbactualizar.addActionListener( new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				actualizarListaMensajes( S.getUserStr(), title , chat );
+				actualizarListaMensajes( title , chat );
 			}
 		});
 		
-		tabbedPane.setSelectedIndex( tabbedPane.indexOfTab(title));
-		JPanel panelTop = new JPanel();
-		agregar_botonX( panelTop, tabbedPane , title );
+		tabbedPane.setSelectedIndex( tabbedPane.indexOfTab( title ) );
+		agregar_botonX( title );
 	}
 }

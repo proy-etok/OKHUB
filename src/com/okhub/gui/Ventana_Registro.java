@@ -1,6 +1,7 @@
 package com.okhub.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
@@ -63,7 +64,7 @@ public class Ventana_Registro extends JDialog {
 	public Ventana_Registro() {
 		
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Registro.class.getResource("/com/okhub/gui/EscudoOK.PNG")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Registro.class.getResource("/com/okhub/gui/EscudoOK.png")));
 		
 		setResizable(false);
 		setTitle("Registro");
@@ -80,7 +81,7 @@ public class Ventana_Registro extends JDialog {
 		
 		textFieldUsuario = new JTextField();
 		textFieldUsuario.setToolTipText("No puede tener menos de 4 caracteres");
-		textFieldUsuario.setBounds(23, 42, 103, 20);
+		textFieldUsuario.setBounds(23, 42, 103, 24);
 		textFieldUsuario.setName( "tfUsuario");
 		contentPanel.add(textFieldUsuario);
 				
@@ -90,7 +91,7 @@ public class Ventana_Registro extends JDialog {
 		contentPanel.add(labelUsuario);
 		
 		textFieldUsuarioError = new JTextField();
-		textFieldUsuarioError.setBounds(136, 42, 235, 20);
+		textFieldUsuarioError.setBounds(136, 45, 235, 20);
 		Ajustar_TextFieldError( textFieldUsuarioError );
 		contentPanel.add(textFieldUsuarioError);
 		
@@ -106,17 +107,17 @@ public class Ventana_Registro extends JDialog {
 		
 		passwordFieldContraseña = new JPasswordField();
 		passwordFieldContraseña.setToolTipText("Debe tener como minimo 8 caracteres");
-		passwordFieldContraseña.setBounds(23, 95, 103, 20);
+		passwordFieldContraseña.setBounds(23, 95, 103, 24);
 		passwordFieldContraseña.setName( "pfContraseña" );
 		contentPanel.add(passwordFieldContraseña);
 		
 		textFieldContraseñaError = new JTextField();
-		textFieldContraseñaError.setBounds(136, 95, 235, 20);
+		textFieldContraseñaError.setBounds(136, 97, 235, 20);
 		Ajustar_TextFieldError( textFieldContraseñaError );
 		contentPanel.add(textFieldContraseñaError);
 		
 		passwordFieldRepetirContraseña = new JPasswordField();
-		passwordFieldRepetirContraseña.setBounds(381, 95, 103, 20);
+		passwordFieldRepetirContraseña.setBounds(381, 95, 103, 24);
 		passwordFieldRepetirContraseña.setName( "pfRepetirContraseña" );
 		contentPanel.add(passwordFieldRepetirContraseña);
 		
@@ -135,12 +136,12 @@ public class Ventana_Registro extends JDialog {
 		contentPanel.add(labelDirCorreo);
 		
 		textFieldDirCorreo = new JTextField();
-		textFieldDirCorreo.setBounds(23, 151, 152, 20);
+		textFieldDirCorreo.setBounds(23, 151, 152, 24);
 		textFieldDirCorreo.setName( "tfDirCorreo" );
 		contentPanel.add(textFieldDirCorreo);
 		
 		textFieldDirCorreoError = new JTextField();
-		textFieldDirCorreoError.setBounds(185, 151, 186, 20);
+		textFieldDirCorreoError.setBounds(185, 153, 186, 20);
 		textFieldDirCorreoError.setName( "tfRepetirDirCorreo" );
 		Ajustar_TextFieldError( textFieldDirCorreoError );
 		contentPanel.add(textFieldDirCorreoError);
@@ -151,7 +152,7 @@ public class Ventana_Registro extends JDialog {
 		contentPanel.add(labelRepetirDirCorreo);
 		
 		textFieldRepetirDirCorreo = new JTextField();
-		textFieldRepetirDirCorreo.setBounds(381, 151, 152, 20);
+		textFieldRepetirDirCorreo.setBounds(381, 151, 152, 24);
 		textFieldRepetirDirCorreo.setName( "tfRepetirDirCorreo" );
 		contentPanel.add(textFieldRepetirDirCorreo);
 		
@@ -166,7 +167,7 @@ public class Ventana_Registro extends JDialog {
 		
 		comboBoxSexo = new JComboBox<String>();
 		comboBoxSexo.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		comboBoxSexo.setBounds(23, 207, 103, 20);
+		comboBoxSexo.setBounds(23, 207, 103, 24);
 		comboBoxSexo.addItem( "Masculino" );
 		comboBoxSexo.addItem( "Femenino" );
 	
@@ -183,13 +184,13 @@ public class Ventana_Registro extends JDialog {
 		contentPanel.add(LabelFecha);
 		
 		textFieldFecha = new JFormattedTextField(  );
-		textFieldFecha.setBounds( 185 , 207 , 103 , 20 );
+		textFieldFecha.setBounds( 185 , 207 , 103 , 24 );
 		textFieldFecha.setName( "tfFecha" );
 		contentPanel.add(textFieldFecha);
 		textFieldFecha.setColumns(10);
 		
 		textFieldFechaError = new JTextField();
-		textFieldFechaError.setBounds(298, 207, 235, 20);
+		textFieldFechaError.setBounds(298, 209, 235, 20);
 		Ajustar_TextFieldError( textFieldFechaError );
 		contentPanel.add(textFieldFechaError);
 		
@@ -204,7 +205,7 @@ public class Ventana_Registro extends JDialog {
 		
 		textFieldPais = new JTextField();
 		textFieldPais.setColumns(10);
-		textFieldPais.setBounds(23, 263, 103, 20);
+		textFieldPais.setBounds(23, 263, 103, 24);
 		contentPanel.add(textFieldPais);
 		
 		
@@ -246,13 +247,12 @@ public class Ventana_Registro extends JDialog {
 	
 	public void Ajustar_TextFieldError ( JTextField tf ) {
 		
-		
-			tf.setBackground( contentPanel.getBackground() );
-			tf.setFont( new Font( "Tahoma" , Font.ITALIC , 10 ) );
-			tf.setBorder( null );
-			tf.setEditable( false );
-			tf.setFocusable( false );
-			tf.setColumns( 10 );
+		tf.setBackground( new Color(214,217,223) );
+		tf.setBorder( null );
+		tf.setFont( new Font( "Tahoma" , Font.ITALIC , 10 ) );
+		tf.setEditable( false );
+		tf.setFocusable( false );
+		tf.setColumns( 10 );
 			
 	}
 } // fin clase Ventana_Registro

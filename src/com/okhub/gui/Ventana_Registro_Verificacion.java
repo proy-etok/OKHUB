@@ -48,10 +48,8 @@ public class Ventana_Registro_Verificacion  {
 	
 	public String Verificar_Datos_Contraseña( char[] password , char[] repetir_password ) {
 		
-		
-		
 		while ( password.length > 0 ) {
-			if ( password.length < 7 ) {
+			if ( password.length <= 7 ) {
 				ingresoValido[CONTRASEÑA] = false;
 				return  "*La contraseña debe tener 8 o más caracteres";
 			}
@@ -131,7 +129,7 @@ public class Ventana_Registro_Verificacion  {
 			}
 			
 			if ( Sesion.existeCorreo(correo) ) {
-				ingresoValido[USUARIO] = false;
+				ingresoValido[DIRCORREO] = false;
 				return "*El correo ya está en uso";
 			}
 

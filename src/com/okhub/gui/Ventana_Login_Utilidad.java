@@ -99,9 +99,8 @@ public void Crear_Ventana_Login () {
 					
 					
 				else {
-					JOptionPane.showMessageDialog( null, "Logeadisimo" ,
-						"Bienvenido", JOptionPane.INFORMATION_MESSAGE);
-						Ventana_Principal_Utilidad.Crear_Ventana_Principal(Ses);
+					
+					Ventana_Principal_Utilidad.Crear_Ventana_Principal(Ses);
 					dispose();					
 				}
 			}

@@ -63,6 +63,7 @@ public class Sesion
     public User[] obtenerListaAmigos ( ) {
     	
     	String usuariosStr = (PHPConnector.funcion_PHP("obtener_Lista_Amigos" , user.nombre ));
+    	System.out.println(usuariosStr);
     	return JSON.getUserArray(usuariosStr);
     	
     }
@@ -105,4 +106,32 @@ public class Sesion
     	return JSON.getUser( usuarioStr );
     	
     }
+    
+    public boolean agregarAmigo ( String amigo ) {
+    	
+    	return tomarResultado( PHPConnector.funcion_PHP("agregar_Amigo" , getUserStr() , amigo ) );
+    	
+	}
+    public boolean aceptarAmistad ( String amigo ) {
+    	
+    	return tomarResultado( PHPConnector.funcion_PHP("aceptar_Amistad" , getUserStr() , amigo ) );
+    	
+    }
+    
+    public boolean rechazarAmistad ( String amigo ) {
+    	
+    	return tomarResultado( PHPConnector.funcion_PHP("rechazar_Amistad" , getUserStr() , amigo ) );
+    	
+    }
+    
+    public User[] obtenerAmigosEspera ( ) {
+    	
+    	String amigosStr = (PHPConnector.funcion_PHP("obtener_AmigosEspera" , user.nombre ));
+    	System.out.println(amigosStr);
+    	return JSON.getUserArray(amigosStr);
+    	
+    }
+    
 }
+
+
