@@ -14,6 +14,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import com.okhub.data.dataLogin;
+import com.okhub.gui.vp.Ventana_Principal_Utilidad;
 import com.okhub.oho.interfaz.Sesion;
 
 
@@ -30,7 +31,7 @@ public class Ventana_Login_Utilidad extends Ventana_Login {
 	 * Metodo de confirmacion de contraseña
 	 * @param usuario 
 	 */
-public void Crear_Ventana_Login () {
+public static void Crear_Ventana_Login () {
 		
 		try {
 			Ventana_Login_Utilidad dialog = new Ventana_Login_Utilidad();
@@ -65,8 +66,7 @@ public void Crear_Ventana_Login () {
 			public void mouseClicked(MouseEvent arg0) {
 				
 				dispose();
-				Ventana_Registro_Utilidad vru = new Ventana_Registro_Utilidad();
-				vru.Crear_Ventana_Registro();
+				Ventana_Registro_Utilidad.Crear_Ventana_Registro();
 				
 			}
 		

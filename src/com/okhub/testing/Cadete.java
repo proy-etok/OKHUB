@@ -2,6 +2,9 @@ package com.okhub.testing;
 
 import java.util.PriorityQueue;
 
+import com.okhub.gui.Ventana_Registro_Verificacion;
+import com.okhub.oho.interfaz.Sesion;
+
 public class Cadete extends Thread 
 {
 	PriorityQueue<Tarea> tareas = new PriorityQueue<Tarea>() ;
@@ -76,6 +79,8 @@ public class Cadete extends Thread
 		
 		try
 		{
+			Ventana_Registro_Verificacion vrv = null;
+			
 			switch((a.nombre.split(" PARA: "))[0])
 			{
 			case "NOOP": Cadete.sleep(4000); realizada = true; break;
@@ -86,6 +91,26 @@ public class Cadete extends Thread
 			realizada = true; 
 			break;
 			
+			case "EXISTEUSUARIO": Cadete.sleep(4000);
+			a.resultado = Sesion.existeUsuario(((String)a.parametros[0]));
+			realizada = true;
+			a.jefe.entregarTarea(a);
+			break;
+			
+			case "VERIFICARUSUARIO":
+				vrv = new Ventana_Registro_Verificacion();
+				a.resultado = vrv.Verificar_Datos_Usuario((String)a.parametros[1]);
+				realizada = true;
+				a.jefe.entregarTarea(a);
+				
+				break;
+				
+			case "VERIFICARCORREO":
+				vrv = new Ventana_Registro_Verificacion();
+				a.resultado = vrv.Verificar_Datos_Correo( (String)a.parametros[1] , (String)a.parametros[2] );
+				realizada = true;
+				a.jefe.entregarTarea(a);
+				break;
 
 			// TODO Aca se deben agregar las funciones con sus nombres y la forma en que se llaman;
 			
@@ -94,11 +119,11 @@ public class Cadete extends Thread
 			case "MATATE":
 			case "DESPEDIDO":
 			case "PILLO":  System.out.println("NOOoOoO!!!"); 
-			a.nombre = " PARA: MI MORIR ES VIVIR";
-			a.resultado = this;
-			a.jefe.entregarTarea(a);
-			realizada = true;
-			despedido = true;
+				a.nombre = "* PARA: MI MORIR ES VIVIR";
+				a.resultado = this;
+				a.jefe.entregarTarea(a);
+				realizada = true;
+				despedido = true;
 			break;
 			
 			default: Cadete.sleep(100); realizada = true; a.resultado = true; break;

@@ -3,6 +3,7 @@ package com.okhub.data;
 
 import com.google.gson.*;
 import com.okhub.oho.interfaz.Mensaje;
+import com.okhub.oho.interfaz.Publicacion;
 import com.okhub.oho.interfaz.User;
 
 public class JSON
@@ -52,6 +53,11 @@ public class JSON
 		Gson g = new Gson();
 		return g.toJson( mensajes );
 		
+	}
+
+	public static Publicacion[] getPublicacionesArray(String publicacionesStr) {
+		Gson g = new Gson();
+		return g.fromJson( publicacionesStr, Publicacion[].class);
 	}
 	
 /*public static void main(String[] args) throws Exception	

@@ -1,4 +1,4 @@
-package com.okhub.gui;
+package com.okhub.gui.vp;
 
 import java.awt.Color;
 import java.awt.Component;
