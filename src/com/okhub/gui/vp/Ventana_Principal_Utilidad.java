@@ -1,4 +1,4 @@
-package com.okhub.gui;
+package com.okhub.gui.vp;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -20,6 +20,7 @@ import javax.swing.JTextPane;
 import net.miginfocom.swing.MigLayout;
 
 import com.okhub.oho.interfaz.Mensaje;
+import com.okhub.oho.interfaz.Publicacion;
 import com.okhub.oho.interfaz.Sesion;
 
 public class Ventana_Principal_Utilidad extends Ventana_Principal {
@@ -63,21 +64,7 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String input = JOptionPane.showInputDialog( friendsPane.menu , "Ingrese su nombre " , "Agregar amigo" , JOptionPane.QUESTION_MESSAGE );
-/*				if ( input.contains("@") )
-					if ( S.existeCorreo( input ) ) {
-						JOptionPane.showMessageDialog(menu, input + " Agregadisimo" , "Felicitaciones!" , JOptionPane.INFORMATION_MESSAGE );
-						return;
-					}*/
-				if ( S.existeUsuario( input ) ) {
-					S.agregarAmigo( input );
-					JOptionPane.showMessageDialog(friendsPane.menu, input + " Agregadisimo" , "Felicitaciones!" , JOptionPane.INFORMATION_MESSAGE );
-					RefrescarListaAmigos();
-					return;
-				}
-				
-				JOptionPane.showMessageDialog(friendsPane.menu, input + " no existe" , "Error" , JOptionPane.INFORMATION_MESSAGE );
-				
+				agregarAmigo();
 			}
 		});
 
@@ -109,12 +96,44 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 							
 							public void actionPerformed(ActionEvent arg0) {
 								if ( S.rechazarAmistad( lbl.getText() ) )  {
+									if ( existeConversacion( tabbedPane , lbl.getText() ))
+										tabbedPane.removeTabAt( tabbedPane.indexOfTab( lbl.getText() ) );
 									JOptionPane.showMessageDialog( lbl , lbl.getText() + " eliminadisimo"   , "Tenes un amigo menos" , JOptionPane.INFORMATION_MESSAGE );
 									RefrescarListaAmigos();
 								}
 							}
 						});
 						popupMenu.add(miEliminar);
+						
+						final JMenuItem miPublicacion = new JMenuItem("Ver publicaciones");
+						miPublicacion.addActionListener(new ActionListener() {
+							
+							public void actionPerformed(ActionEvent arg0) {
+								System.out.println( lbl.getText() );
+								if ( existeConversacion(tabbedPane, "Publicaciones de " + lbl.getText() ) ) {
+									tabbedPane.setSelectedIndex( tabbedPane.indexOfTab( "Publicaciones de " + lbl.getText() ) );
+									return;
+								}
+								Publicacion[] publicaciones = S.obtenerPublicaciones( lbl.getText() );
+								if ( publicaciones == null )
+									return;
+								JScrollPane sp = Ventana_Principal_Publicacion.verPublicaciones( lbl.getText(),  publicaciones );
+								JButton btnRefrescar = new JButton ("R");
+								btnRefrescar.addActionListener( new ActionListener() {
+									
+									@Override
+									public void actionPerformed(ActionEvent e) {
+										miPublicacion.doClick();
+									}
+								} ) ; 
+								sp.add(btnRefrescar);
+								
+								tabbedPane.addTab("Publicaciones de " + lbl.getText(), sp  );
+								agregar_botonX("Publicaciones de " + lbl.getText() );
+								tabbedPane.setSelectedIndex( tabbedPane.indexOfTab( "Publicaciones de " + lbl.getText() ) );
+							}
+						});
+						popupMenu.add(miPublicacion);
 						
 						popupMenu.show(lbl, e.getX(), e.getY() );
 						
@@ -139,6 +158,7 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 		
 		friendsPane.friendsList.repaint();
 	}
+	
 	
 	public void actualizarListaMensajes ( String amigo, JTextPane chat ){
 		
@@ -200,5 +220,22 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 		
 		tabbedPane.setSelectedIndex( tabbedPane.indexOfTab( title ) );
 		agregar_botonX( title );
+	}
+	
+	public void agregarAmigo () {
+		String input = JOptionPane.showInputDialog( friendsPane.menu , "Ingrese su nombre " , "Agregar amigo" , JOptionPane.QUESTION_MESSAGE );
+/*				if ( input.contains("@") )
+					if ( S.existeCorreo( input ) ) {
+						JOptionPane.showMessageDialog(menu, input + " Agregadisimo" , "Felicitaciones!" , JOptionPane.INFORMATION_MESSAGE );
+						return;
+					}*/
+		if ( S.existeUsuario( input ) ) {
+			S.agregarAmigo( input );
+			JOptionPane.showMessageDialog(friendsPane.menu, input + " Agregadisimo" , "Felicitaciones!" , JOptionPane.INFORMATION_MESSAGE );
+			RefrescarListaAmigos();
+			return;
+		}
+		
+		JOptionPane.showMessageDialog(friendsPane.menu, input + " no existe" , "Error" , JOptionPane.INFORMATION_MESSAGE );
 	}
 }

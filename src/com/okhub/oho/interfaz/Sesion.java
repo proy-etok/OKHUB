@@ -132,6 +132,21 @@ public class Sesion
     	
     }
     
+    public Publicacion[] obtenerPublicaciones ( String usuario ) {
+    	
+    	String publicacionesStr = (PHPConnector.funcion_PHP("obtener_Publicaciones" , usuario ));
+    	System.out.println(publicacionesStr);
+    	return JSON.getPublicacionesArray(publicacionesStr);
+    	
+    }
+    public Publicacion[] obtenerPublicaciones ( ) {
+    	
+    	String publicacionesStr = (PHPConnector.funcion_PHP("obtener_Publicaciones" , user.nombre ));
+    	System.out.println(publicacionesStr);
+    	return JSON.getPublicacionesArray(publicacionesStr);
+    	
+    }
+    
 }
 
 

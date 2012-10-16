@@ -1,4 +1,4 @@
-package com.okhub.gui;
+package com.okhub.gui.vp;
 
 import java.awt.Dimension;
 
@@ -8,6 +8,9 @@ import java.awt.Toolkit;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JSplitPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.JOptionPane;
@@ -34,6 +37,7 @@ public class Ventana_Principal {
 	JFrame frame;
 	JTabbedPane tabbedPane;
 	JTextField prueba;
+	JSplitPane splitPane;
 	Ventana_Principal_PanelAmigos friendsPane;
 
 	int indexTab;
@@ -87,36 +91,35 @@ public class Ventana_Principal {
 		mnMenu.add(miHola);
 		
 		
-		frame.getContentPane().setLayout(new MigLayout("", "[300px,grow,fill][137px,growprio 50,grow,left]", "[315px,grow,fill]"));
+		frame.getContentPane().setLayout(new MigLayout( "","[437px,grow,fill]", "[315px,grow,fill]" ) );
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		tabbedPane.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		frame.getContentPane().add(tabbedPane, "cell 0 0,grow");
+		
+		splitPane = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT );
+		splitPane.setVisible( true );
+		
+		splitPane.setLeftComponent(tabbedPane);
+	    splitPane.setOneTouchExpandable(true);
 		
 		agregar_PanelInicio();
 		tabbedPane.addTab("Pizarron", new PizarronPanel(Ses));
 		tabbedPane.setSelectedIndex(tabbedPane.indexOfTab("Inicio"));
 		
 		friendsPane = new Ventana_Principal_PanelAmigos( Ses );
-		frame.getContentPane().add(friendsPane, "cell 1 0,grow");
+		splitPane.setRightComponent(friendsPane);
 		
-		miHola.addMouseListener(new MouseAdapter() {
-			@Override 
-			public void mousePressed (MouseEvent arg0) {
-				
-
-				
-			}
-		});		
+		splitPane.setDividerLocation(450);
+	    splitPane.setDividerSize(10);
 		
-		miFile.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed( MouseEvent e ) {
-				
-
-				
-			}
-		});
+		friendsPane.setMinimumSize(new Dimension ( 100 , 50 ));
+		tabbedPane.setMinimumSize(new Dimension ( 137 , 50 ));
+		
+		friendsPane.setPreferredSize(new Dimension (300,400));
+		tabbedPane.setPreferredSize(new Dimension (137,400));
+		
+		frame.getContentPane().add(splitPane, "grow");
+		
 		
 	}
 	
@@ -153,14 +156,21 @@ public class Ventana_Principal {
 		});
 	}
 	
+	/**
+	 * @author Gseva
+	 * 
+	 * 
+	 */
+	
 	public void agregar_PanelInicio () {
 		
-		final JPanel panelInicio = new JPanel(new MigLayout("","[grow,fill]","[][fill,grow]"));
-		tabbedPane.addTab("Inicio", null, panelInicio, null);
+		final JPanel panelInicio = new JPanel(new MigLayout("fillx","[grow]","5[pref]"));
+		JScrollPane sp = new JScrollPane( panelInicio , JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED , JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
+		tabbedPane.addTab("Inicio", null, sp, null);
 		prueba = new JTextField();
 		prueba.setEditable(false);
-		prueba.setText( Ses.getUserStr() );
-		panelInicio.add( prueba, "split 2,growx");
+		prueba.setText( "Bienvenido, " + Ses.getUserStr() + "!" );
+		panelInicio.add( prueba, "growx,split 2");
 		
 		JButton botonRefrescarInicio = new JButton( "R" );
 		botonRefrescarInicio.addActionListener( new ActionListener() {
@@ -177,8 +187,8 @@ public class Ventana_Principal {
 		User[] amigosEspera = Ses.obtenerAmigosEspera();
 		if ( amigosEspera != null )
 		for (final User amigo : amigosEspera ) {
-			final JPanel panelAmigo = new JPanel(new MigLayout("","[grow]"));
-			JLabel labelAmigo = new JLabel( amigo.nombre );
+			final JPanel panelAmigo = new JPanel(new MigLayout("fillx","[grow]","10[]"));
+			JLabel labelAmigo = new JLabel( "Tiene una invitacion de "+amigo.nombre );
 			JButton aceptarAmigo = new JButton( "Aceptar" );
 			JButton rechazarAmigo = new JButton( "Rechazar" );
 			
@@ -209,11 +219,12 @@ public class Ventana_Principal {
 				}
 			});
 			
-			panelAmigo.add(labelAmigo , "split 2 , grow");
-			panelAmigo.add(aceptarAmigo ,"split 2");
-			panelAmigo.add(rechazarAmigo);
+			panelAmigo.add(labelAmigo , "growx,split 3");
+			panelAmigo.add(aceptarAmigo ,"right");
+			panelAmigo.add(rechazarAmigo , "right");
+			panelAmigo.add(new JSeparator(JSeparator.HORIZONTAL) , "newline,growx");
 			
-			panelInicio.add(panelAmigo , "grow,wrap");
+			panelInicio.add(panelAmigo , "top,growx,wrap");
 			
 		}
 		

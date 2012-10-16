@@ -11,6 +11,9 @@ import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
 import com.okhub.oho.interfaz.Sesion;
+import com.okhub.testing.Cadete;
+import com.okhub.testing.Jefe;
+import com.okhub.testing.Tarea;
 
 /**
  * @author GSeva
@@ -24,7 +27,6 @@ import com.okhub.oho.interfaz.Sesion;
 
 public class Ventana_Registro_Utilidad extends Ventana_Registro {
 	
-	
 	/**
 	 * 
 	 */
@@ -34,7 +36,7 @@ public class Ventana_Registro_Utilidad extends Ventana_Registro {
 	 * 
 	 */
 
-	public void Crear_Ventana_Registro() 
+	public static void Crear_Ventana_Registro() 
 	{
 		try {
 			Ventana_Registro_Utilidad dialog = new Ventana_Registro_Utilidad();
@@ -47,7 +49,7 @@ public class Ventana_Registro_Utilidad extends Ventana_Registro {
 	
 	public Ventana_Registro_Utilidad() 
 	{
-		
+		esta = this;
 
 		System.out.printf( comboBoxSexo.getSelectedItem().toString() );
 		Agregar_Focus_Listener_textField( textFieldUsuario );
@@ -86,11 +88,17 @@ public class Ventana_Registro_Utilidad extends Ventana_Registro {
 				JTextField tferror = null;
 				if ( nombre.contains( "Usuario" ) ) {	
 					tferror = textFieldUsuarioError;
-					tferror.setText( vrv.Verificar_Datos_Usuario( textFieldUsuario.getText() ) );
+					Carlos.agregarTarea( new Tarea("VERIFICARUSUARIO PARA: IMPRIMIR TFERROR" , esta , new Object[]{tferror,textFieldUsuario.getText()} ) );
+//					tferror.setText( vrv.Verificar_Datos_Usuario( textFieldUsuario.getText() ) );
+					if ( tferror.getText().startsWith( "*" ) ) 
+						tferror.setForeground( Color.RED );
+					else
+						tferror.setForeground( Color.GREEN );
 				}
 				if ( nombre.contains( "DirCorreo" ) ) {	
 					tferror = textFieldDirCorreoError;
-					tferror.setText( vrv.Verificar_Datos_Correo( textFieldDirCorreo.getText() , textFieldRepetirDirCorreo.getText() ) );
+					Carlos.agregarTarea( new Tarea("VERIFICARCORREO PARA: IMPRIMIR TFERROR" , esta , new Object[]{tferror,textFieldDirCorreo.getText() , textFieldRepetirDirCorreo.getText() } ) );
+//					tferror.setText( vrv.Verificar_Datos_Correo( textFieldDirCorreo.getText() , textFieldRepetirDirCorreo.getText() ) );
 				}
 				if ( nombre.contains( "Fecha" ) ) {	
 					tferror = textFieldFechaError;
@@ -101,13 +109,10 @@ public class Ventana_Registro_Utilidad extends Ventana_Registro {
 					tferror.setText( vrv.Verificar_Datos_Contraseña( passwordFieldContraseña.getPassword() , passwordFieldRepetirContraseña.getPassword() ) );
 				}
 				
-				
 				if ( tferror.getText().startsWith( "*" ) ) 
 					tferror.setForeground( Color.RED );
 				else
 					tferror.setForeground( Color.GREEN );
-				
-
 				
 			}
 			
@@ -156,6 +161,7 @@ public class Ventana_Registro_Utilidad extends Ventana_Registro {
 		return true;
 		
 	}
+
 	
 
 	

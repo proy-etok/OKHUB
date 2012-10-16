@@ -15,6 +15,11 @@ import java.awt.Font;
 import javax.swing.JPasswordField;
 import javax.swing.JComboBox;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
+
+import com.okhub.testing.Cadete;
+import com.okhub.testing.Jefe;
+import com.okhub.testing.Tarea;
+
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -30,16 +35,22 @@ import java.awt.Toolkit;
  * 
  * */
 
-public class Ventana_Registro extends JDialog {
+
+public class Ventana_Registro extends JDialog implements Jefe {
 	
 
 	/**
 	 * 
 	 */
+	
+	
 	private static final long serialVersionUID = 1L;
 	public JPanel contentPanel = new JPanel();
 	public JPanel buttonPane = new JPanel();
 	JButton buttonRegistrarse = new JButton("Registrarse");
+	
+	Cadete Carlos;
+	Jefe esta;
 	
 
 	public JComboBox<String> comboBoxSexo;
@@ -56,6 +67,7 @@ public class Ventana_Registro extends JDialog {
 	JTextField textFieldContraseñaError;
 	JTextField textFieldDirCorreoError;
 	JTextField textFieldFechaError;
+
 	
 	
 	/**
@@ -65,7 +77,8 @@ public class Ventana_Registro extends JDialog {
 		
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Registro.class.getResource("/com/okhub/gui/EscudoOK.png")));
-		
+		Carlos = new Cadete();
+		Carlos.start();
 		setResizable(false);
 		setTitle("Registro");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -226,8 +239,8 @@ public class Ventana_Registro extends JDialog {
 					public void actionPerformed(ActionEvent arg0) {
 						
 						dispose();
-						Ventana_Login_Utilidad vl = new Ventana_Login_Utilidad();
-						vl.Crear_Ventana_Login();
+						Carlos.agregarTarea( new Tarea ("PILLO", esta ) );
+						Ventana_Login_Utilidad.Crear_Ventana_Login();
 						
 						
 					}
@@ -255,4 +268,39 @@ public class Ventana_Registro extends JDialog {
 		tf.setColumns( 10 );
 			
 	}
+	
+	@Override
+	public void entregarTarea(Tarea tarea) 
+	{
+		if( tarea.nombre.contains( " PARA: " ) )
+			if( tarea.nombre.split( " PARA: " ).length > 1 )
+			{
+				switch( ( tarea.nombre.split(" PARA: ") )[1] )
+				{
+				case "IMPRIMIR TFERROR": 
+				((JTextField) tarea.parametros[0]).setText( (String) tarea.resultado ); 
+				if ( ( (JTextField) tarea.parametros[0] ).getText().startsWith( "*" ) )
+						( (JTextField) tarea.parametros[0] ).setForeground( Color.RED );
+					else
+						( (JTextField) tarea.parametros[0] ).setForeground( Color.GREEN );
+				break;
+				case "IMPRIMIR LINEA": System.out.println(":-:---------------------------------------------------------:-:"); break;
+				case "IMPRIMIR EN PANTALLA": System.out.println(tarea.resultado); break;
+				case "MI MORIR ES VIVIR":
+					System.out.println(" MUERE: " + tarea.resultado); try {
+						((Cadete)tarea.resultado).join(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					} break;
+				default: break;
+				}
+			}					
+	}
+
+	@Override
+	public void atenderTareas() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 } // fin clase Ventana_Registro

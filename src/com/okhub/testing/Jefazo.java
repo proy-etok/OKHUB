@@ -61,18 +61,16 @@ public class Jefazo implements Jefe
 	    System.out.println("                            Contrato a Carlos");
 	    
 	    carlos.start ();
-		
-	    
 	    
 	    System.out.println("                            Le doy una tarea");
 	    
-	    carlos.agregarTarea(new Tarea("ESPERAR PARA: IMPRIMIR EN PANTALLA", this ,new Object[]{2000}, false,0.33f));
+	    carlos.agregarTarea(new Tarea("EXISTEUSUARIO PARA: IMPRIMIR EN PANTALLA", this ,new Object[]{"josue"}, false,0.33f));
 	    
 	    
 	    
 	    System.out.println("                            Le doy otra tarea");
 	    
-	    carlos.agregarTarea(new Tarea("ESPERAR PARA: IMPRIMIR LINEA", this ,new Object[]{8000}, false));
+	    carlos.agregarTarea(new Tarea("EXISTEUSUARIO PARA: IMPRIMIR EN PANTALLA", this ,new Object[]{"gseva"}, false,0.33f));
 	    
 	    
 	    try

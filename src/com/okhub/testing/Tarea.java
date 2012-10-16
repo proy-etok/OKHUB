@@ -1,23 +1,23 @@
 package com.okhub.testing;
 
+import javax.swing.JLabel;
+
 public class Tarea implements Comparable<Tarea>
 {
-String nombre = "NOOP";
+	public String nombre = "NOOP";
+		
+	public Object resultado = null;
+		
+	public Object[] parametros = null;
+		
+	public Jefe jefe = null;
+		
+	public int maxReintentos = 1;
+		
+	public float prioridad = 0.42f;
 	
-	Object resultado = null;
 	
-	Object[] parametros = null;
-	
-	Jefe jefe = null;
-	
-	int maxReintentos = 1;
-	
-	float prioridad = 0.42f;
-	
-	
-	
-	public Tarea()
-	{}
+	public Tarea(){}
 	
 	public Tarea(String n, Jefe j)
 	{
@@ -79,7 +79,6 @@ String nombre = "NOOP";
 		maxReintentos = r;
 	}
 
-	
 	
 	public Tarea(String n, Jefe j, float pr)
 	{

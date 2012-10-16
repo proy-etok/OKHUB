@@ -2,10 +2,10 @@ package com.okhub.oho.interfaz;
 
 public class Publicacion {
 	
-	public String Usuario;
-	public String Hora;
-	public String Contenido;
-	public String Adjunto;
+	public String usuario;
+	public String hora;
+	public String contenido;
+	public String adjunto;
 	
 
 }
