@@ -8,6 +8,11 @@ public class Sesion
 {
     private User user = null;
     
+    /**
+     * 
+     * @return User - clase User del usuario logueado
+     */
+    
     public User getUser() { return this.user; }
     public String getUserStr() { return this.user.nombre; };
     public boolean getOnline() { return tomarResultado(String.valueOf(this.user.online)); };
@@ -134,16 +139,24 @@ public class Sesion
     
     public Publicacion[] obtenerPublicaciones ( String usuario ) {
     	
-    	String publicacionesStr = (PHPConnector.funcion_PHP("obtener_Publicaciones" , usuario ));
+    	String publicacionesStr = (PHPConnector.funcion_PHP("obtener_Publicaciones_Usuario" , usuario ));
     	System.out.println(publicacionesStr);
     	return JSON.getPublicacionesArray(publicacionesStr);
     	
     }
     public Publicacion[] obtenerPublicaciones ( ) {
     	
-    	String publicacionesStr = (PHPConnector.funcion_PHP("obtener_Publicaciones" , user.nombre ));
+    	String publicacionesStr = (PHPConnector.funcion_PHP("obtener_Publicaciones_Usuario" , user.nombre ));
     	System.out.println(publicacionesStr);
     	return JSON.getPublicacionesArray(publicacionesStr);
+    	
+    }
+    
+    public boolean agregarPublicacion ( String contenido , String adjunto ) {
+    	
+    	System.out.println(contenido);
+    	System.out.println(adjunto);
+    	return tomarResultado( PHPConnector.funcion_PHP("agregar_Publicacion" , getUserStr() , contenido , adjunto ) );
     	
     }
     

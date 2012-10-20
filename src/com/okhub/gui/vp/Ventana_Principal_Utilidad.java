@@ -23,14 +23,23 @@ import com.okhub.oho.interfaz.Mensaje;
 import com.okhub.oho.interfaz.Publicacion;
 import com.okhub.oho.interfaz.Sesion;
 
+
+/**
+ * Clase que completa la creacion de la aplicacion. Extiende Ventana_Principal.
+ * <p>
+ * Agrega a la ventana madre la mayoria de los metodos de interaccion.
+ * 
+ * @author Gseva
+ * @version 0.0.1
+ * @see Ventana_Principal
+ */
 public class Ventana_Principal_Utilidad extends Ventana_Principal {
 	
 	Sesion S;
 	JTextField tfenviar;
 	
 	/**
-	 * Launch the application.
-	 * @return 
+	 * Crea la ventana.
 	 */
 	static public void Crear_Ventana_Principal( final Sesion Ses) {
 		EventQueue.invokeLater(new Runnable() {
@@ -44,7 +53,13 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 			}
 		});
 	}
-
+	/**
+	 * Clase constructora de la ventana principal. 
+	 * Agrega todo tipo de listeners a los botones de distintas clases usadas.
+	 * 
+	 * @param Ses - la sesion actual con la que se logueó el usuario.
+	 * @see Ventana_Principal#Ventana_Principal(Sesion)
+	 */
 	public Ventana_Principal_Utilidad(Sesion Ses) {
 		super(Ses);
 		this.S = Ses;
@@ -67,9 +82,34 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 				agregarAmigo();
 			}
 		});
+		
+		friendsPane.miPublicaciones.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				mostrarMiPublicacion();
+				
+			}
+		});
+		
+		panelInicio.botonRefrescarInicio.addActionListener( new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				refrescarPanelInicio();
+			}
+		} );
 
 	}
 	
+	/**
+	 * Refresca el panel de amigos recreandolo.
+	 * Warning: El codigo tiene un nivel elevado de hinduismo
+	 * 
+	 * @see Sesion
+	 * @see Ventana_Principal_PanelAmigos
+	 */
 	
 	public void RefrescarListaAmigos (  ) {
 		JLabel[] amigosLbl = friendsPane.actualizarListaAmigos( S.obtenerListaAmigos() );
@@ -87,7 +127,8 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 						miChat.addActionListener(new ActionListener() {
 							
 							public void actionPerformed(ActionEvent arg0) {
-								agregarTabChat( lbl.getText() );
+								Ventana_Principal_Chat vpc = new Ventana_Principal_Chat(lbl.getText(), S , tabbedPane );
+								agregar_botonX(lbl.getText());
 							}
 						});
 						popupMenu.add(miChat);
@@ -96,7 +137,7 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 							
 							public void actionPerformed(ActionEvent arg0) {
 								if ( S.rechazarAmistad( lbl.getText() ) )  {
-									if ( existeConversacion( tabbedPane , lbl.getText() ))
+									if ( existeTab( tabbedPane , lbl.getText() ))
 										tabbedPane.removeTabAt( tabbedPane.indexOfTab( lbl.getText() ) );
 									JOptionPane.showMessageDialog( lbl , lbl.getText() + " eliminadisimo"   , "Tenes un amigo menos" , JOptionPane.INFORMATION_MESSAGE );
 									RefrescarListaAmigos();
@@ -110,25 +151,17 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 							
 							public void actionPerformed(ActionEvent arg0) {
 								System.out.println( lbl.getText() );
-								if ( existeConversacion(tabbedPane, "Publicaciones de " + lbl.getText() ) ) {
+								if ( existeTab(tabbedPane, "Publicaciones de " + lbl.getText() ) ) {
 									tabbedPane.setSelectedIndex( tabbedPane.indexOfTab( "Publicaciones de " + lbl.getText() ) );
 									return;
 								}
 								Publicacion[] publicaciones = S.obtenerPublicaciones( lbl.getText() );
 								if ( publicaciones == null )
 									return;
-								JScrollPane sp = Ventana_Principal_Publicacion.verPublicaciones( lbl.getText(),  publicaciones );
-								JButton btnRefrescar = new JButton ("R");
-								btnRefrescar.addActionListener( new ActionListener() {
-									
-									@Override
-									public void actionPerformed(ActionEvent e) {
-										miPublicacion.doClick();
-									}
-								} ) ; 
-								sp.add(btnRefrescar);
 								
-								tabbedPane.addTab("Publicaciones de " + lbl.getText(), sp  );
+								Ventana_Principal_Publicacion vpp = new Ventana_Principal_Publicacion(lbl.getText(), S);
+								
+								tabbedPane.addTab("Publicaciones de " + lbl.getText(), vpp  );
 								agregar_botonX("Publicaciones de " + lbl.getText() );
 								tabbedPane.setSelectedIndex( tabbedPane.indexOfTab( "Publicaciones de " + lbl.getText() ) );
 							}
@@ -140,7 +173,9 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 					}
 					if ( e.getClickCount() == 2 ) {
 						
-						agregarTabChat( lbl.getText() );
+						Ventana_Principal_Chat vpc = new Ventana_Principal_Chat(lbl.getText(), S , tabbedPane );
+						agregar_botonX(lbl.getText());
+						
 					}
 				}
 				
@@ -159,69 +194,26 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 		friendsPane.friendsList.repaint();
 	}
 	
+	/**
+	 * Refresca el panel de inicio recreandolo.
+	 * @see Ventana_Principal_Inicio#Ventana_Principal_Inicio(Sesion, Ventana_Principal_PanelAmigos)
+	 */
 	
-	public void actualizarListaMensajes ( String amigo, JTextPane chat ){
+	public void refrescarPanelInicio () {
 		
-		Mensaje[] mensajes = S.obtenerListaMensaje( amigo );
-		String mensaje = "";
-		if ( mensajes.length == 0 ) return;
-		
-		chat.setText("");
-		for ( int i = mensajes.length - 1 ; i > -1 ; i-- ) {
-	
-			mensaje += mensajes[i].origen + " [" ;
-			mensaje += mensajes[i].hora + "] : \n";
-			mensaje += ">>" + mensajes[i].mensaje + "\n";
-	
-			System.out.println(mensajes[i].destino);
-			System.out.println(S.getUser());
-			if ( mensajes[i].destino.toLowerCase().contentEquals( S.getUserStr().toLowerCase() ) ) {
-				S.acusarRecibo( mensajes[i].origen , mensajes[i].hora );
-				mensajes[i].recibido = 1;
-			}	
-		
-		chat.setText( mensaje );
-		}
+		tabbedPane.removeTabAt(tabbedPane.indexOfTab("Inicio"));
+		tabbedPane.addTab("Inicio" , new JScrollPane( 
+				new Ventana_Principal_Inicio(S , friendsPane ) , 
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED ,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED ) );
 		
 	}
 	
-	public void agregarTabChat ( final String title )
-	{
-		if ( existeConversacion(tabbedPane, title ) ){
-			tabbedPane.setSelectedIndex( tabbedPane.indexOfTab(title) );
-			return;
-		}
-		MigLayout ml = new MigLayout("","grow,fill","[80%|20%]");
-		JPanel panel = new JPanel( ml );
-		final JTextPane chat = new JTextPane();
-		chat.setEditable(false);
-		JScrollPane scroll = new JScrollPane( chat , JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED );
-		panel.add( scroll , "grow,wrap" );
-		tfenviar = new JTextField( "" );
-		panel.add( tfenviar , "split 3, bottom, growx" );
-		JButton jbenviar = new JButton("Enviar");
-		panel.add( jbenviar , "bottom");
-		JButton jbactualizar = new JButton("Actualizar");
-		panel.add( jbactualizar , "bottom,right");
-		tabbedPane.addTab( title , panel );
-		jbenviar.addActionListener( new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if ( !tfenviar.getText().equals( "" ) )
-				S.enviarMensaje( title , tfenviar.getText() );
-			}
-		});
-		jbactualizar.addActionListener( new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				actualizarListaMensajes( title , chat );
-			}
-		});
-		
-		tabbedPane.setSelectedIndex( tabbedPane.indexOfTab( title ) );
-		agregar_botonX( title );
-	}
-	
+	/**
+	 * Le manda la invitacion de amistad a un amigo. 
+	 * Se tiene que introducir el nombre mediante un InputDialog.
+	 * @see Sesion#agregarAmigo(String)
+	 */
 	public void agregarAmigo () {
 		String input = JOptionPane.showInputDialog( friendsPane.menu , "Ingrese su nombre " , "Agregar amigo" , JOptionPane.QUESTION_MESSAGE );
 /*				if ( input.contains("@") )
@@ -237,5 +229,18 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 		}
 		
 		JOptionPane.showMessageDialog(friendsPane.menu, input + " no existe" , "Error" , JOptionPane.INFORMATION_MESSAGE );
+	}
+	
+	/**
+	 * Agrega una pestaña con las publicaciones del usuario logueado
+	 * @see Ventana_Principal_Publicacion#Ventana_Principal_Publicacion(String, Sesion)
+	 */
+	
+	public void mostrarMiPublicacion () {
+		
+		tabbedPane.addTab("Mis Publicaciones", new Ventana_Principal_Publicacion( null , S ) );
+		agregar_botonX("Mis Publicaciones");
+		tabbedPane.setSelectedIndex( tabbedPane.indexOfTab("Mis Publicaciones"));
+		
 	}
 }
