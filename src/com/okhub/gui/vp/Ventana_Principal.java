@@ -1,44 +1,58 @@
 package com.okhub.gui.vp;
 
 import java.awt.Dimension;
-
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
 import java.awt.Toolkit;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JSplitPane;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-
-import com.okhub.oho.interfaz.Sesion;
-import com.okhub.oho.interfaz.User;
-import com.okhub.pizarron.PizarronPanel;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.SoftBevelBorder;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.okhub.oho.interfaz.Sesion;
+import com.okhub.pizarron.PizarronPanel;
+
+/**
+ * La clase madre de las ventanas. Crea la ventana general,
+ * le agrega los elementos indispensables.
+ * 
+ * @author Gseva
+ * @see Ventana_Principal_Utilidad
+ */
 public class Ventana_Principal {
 
 	JFrame frame;
+	
+	/**
+	 * El tabbed pane es el elemento contenedor general 
+	 * al cual se le agregan tabs con el contenido
+	 * como puede ser el chat, las publicaciones, el pizarron, etc.
+	 * Very importante y usado.
+	 */
 	JTabbedPane tabbedPane;
-	JTextField prueba;
+	JTextField panelBienvenida;
 	JSplitPane splitPane;
+	/**
+	 * El panel de amigos, contenedor de la lista de amigos ( TODO y grupos ).
+	 * Contiene un menu de proposito general con herramientas
+	 * de navegacion por el programa.
+	 */
 	Ventana_Principal_PanelAmigos friendsPane;
+	Ventana_Principal_Inicio panelInicio;
 
 	int indexTab;
 	
@@ -46,7 +60,10 @@ public class Ventana_Principal {
 
 
 	/**
-	 * Create the application.
+	 * Crea la ventana madre.
+	 * 
+	 * @param S Sesion con la que se logueó el usuario
+	 * @see Sesion
 	 */
 	public Ventana_Principal(Sesion S) {
 		
@@ -56,7 +73,7 @@ public class Ventana_Principal {
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Inicializa los componentes de la ventana.
 	 */
 	private void initialize() {
 		frame = new JFrame();
@@ -102,12 +119,16 @@ public class Ventana_Principal {
 		splitPane.setLeftComponent(tabbedPane);
 	    splitPane.setOneTouchExpandable(true);
 		
-		agregar_PanelInicio();
-		tabbedPane.addTab("Pizarron", new PizarronPanel(Ses));
-		tabbedPane.setSelectedIndex(tabbedPane.indexOfTab("Inicio"));
 		
 		friendsPane = new Ventana_Principal_PanelAmigos( Ses );
 		splitPane.setRightComponent(friendsPane);
+		
+		panelInicio = new Ventana_Principal_Inicio( Ses , friendsPane  );
+		JScrollPane sp = new JScrollPane( panelInicio , JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED , JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
+		tabbedPane.addTab("Inicio", sp );
+		
+		tabbedPane.addTab("Pizarron", new PizarronPanel(Ses));
+		tabbedPane.setSelectedIndex(tabbedPane.indexOfTab("Inicio"));
 		
 		splitPane.setDividerLocation(450);
 	    splitPane.setDividerSize(10);
@@ -123,7 +144,17 @@ public class Ventana_Principal {
 		
 	}
 	
-	public boolean existeConversacion ( JTabbedPane tab , String title ){
+	/**
+	 * El metodo se fija si existe una pestaña en tab con el titulo title
+	 * 
+	 * @param tab
+	 * - TabbedPane en cuestion
+	 * 
+	 * @param title
+	 * - Titulo de la pestaña
+	 */
+	
+	public static boolean existeTab ( JTabbedPane tab , String title ){
 		
 		for ( int i = 0 ; i < tab.getTabCount() ; i++ )
 			if ( tab.getTitleAt( i ).equals(title) )
@@ -133,8 +164,16 @@ public class Ventana_Principal {
 		
 	}
 	
+	/**
+	 * Le agrega a una pestaña del tabbedPane un panel con el
+	 * titulo title y un boton en el costado derecho superior 
+	 * que cerrará dicha pestaña.
+	 * 
+	 * 
+	 * @param title - title titulo a imprimir en la pestaña.
+	 */
+	
 	public void agregar_botonX( final String title ) {
-		
 		indexTab = tabbedPane.indexOfTab(title);
 		JPanel panel = new JPanel();
 		JButton botonX = new JButton( "" );
@@ -156,80 +195,4 @@ public class Ventana_Principal {
 		});
 	}
 	
-	/**
-	 * @author Gseva
-	 * 
-	 * 
-	 */
-	
-	public void agregar_PanelInicio () {
-		
-		final JPanel panelInicio = new JPanel(new MigLayout("fillx","[grow]","5[pref]"));
-		JScrollPane sp = new JScrollPane( panelInicio , JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED , JScrollPane.HORIZONTAL_SCROLLBAR_NEVER );
-		tabbedPane.addTab("Inicio", null, sp, null);
-		prueba = new JTextField();
-		prueba.setEditable(false);
-		prueba.setText( "Bienvenido, " + Ses.getUserStr() + "!" );
-		panelInicio.add( prueba, "growx,split 2");
-		
-		JButton botonRefrescarInicio = new JButton( "R" );
-		botonRefrescarInicio.addActionListener( new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				tabbedPane.removeTabAt(tabbedPane.indexOfTab("Inicio"));
-				agregar_PanelInicio();
-			}
-		} );
-		
-		panelInicio.add( botonRefrescarInicio, "wrap");
-		
-		User[] amigosEspera = Ses.obtenerAmigosEspera();
-		if ( amigosEspera != null )
-		for (final User amigo : amigosEspera ) {
-			final JPanel panelAmigo = new JPanel(new MigLayout("fillx","[grow]","10[]"));
-			JLabel labelAmigo = new JLabel( "Tiene una invitacion de "+amigo.nombre );
-			JButton aceptarAmigo = new JButton( "Aceptar" );
-			JButton rechazarAmigo = new JButton( "Rechazar" );
-			
-			aceptarAmigo.addActionListener( new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if ( Ses.aceptarAmistad( amigo.nombre ) ) {
-						JOptionPane.showMessageDialog( panelAmigo , amigo.nombre + " agregadisimo" , "Felicitaciones!" , JOptionPane.INFORMATION_MESSAGE );
-						friendsPane.botonRefrescar.doClick();
-						panelAmigo.removeAll();
-						panelInicio.remove(panelAmigo);
-						panelInicio.repaint();
-					}
-				}
-			});
-			rechazarAmigo.addActionListener( new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if ( Ses.rechazarAmistad( amigo.nombre) ) {
-						JOptionPane.showMessageDialog( panelAmigo , amigo.nombre + " rechazadisimo" , "Felicitaciones!" , JOptionPane.INFORMATION_MESSAGE );
-						friendsPane.botonRefrescar.doClick();
-						panelAmigo.removeAll();
-						panelInicio.remove(panelAmigo);
-						panelInicio.repaint();
-					}
-				}
-			});
-			
-			panelAmigo.add(labelAmigo , "growx,split 3");
-			panelAmigo.add(aceptarAmigo ,"right");
-			panelAmigo.add(rechazarAmigo , "right");
-			panelAmigo.add(new JSeparator(JSeparator.HORIZONTAL) , "newline,growx");
-			
-			panelInicio.add(panelAmigo , "top,growx,wrap");
-			
-		}
-		
-		tabbedPane.setSelectedIndex( tabbedPane.indexOfTab("Inicio"));
-		
-		
-	}
 }

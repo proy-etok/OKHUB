@@ -18,7 +18,17 @@ import com.okhub.oho.interfaz.Sesion;
 import com.okhub.oho.interfaz.User;
 
 import net.miginfocom.swing.MigLayout;
-
+/**
+ * Clase creadora del Panel de amigos. Extiende JPanel
+ * <p>
+ * Contiene la lista con amigos, un menu con las herrmientas
+ * de navegacion en el programa. TODO grupos.
+ * Los amigos se imprimen en labels, los cuales tendrán un menu
+ * pop up que contiene las opciones.
+ * @author Gseva
+ * @version 0.0.1
+ * @see Ventana_Principal
+ */
 public class Ventana_Principal_PanelAmigos extends JPanel{
 
 	JPanel friendsList;
@@ -27,13 +37,19 @@ public class Ventana_Principal_PanelAmigos extends JPanel{
 	JMenuBar menuBar;
 	JMenu menu;
 	JMenuItem miAgregarAmigo;
-	JMenuItem miEliminarAmigo;
+	JMenuItem miPublicaciones;
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * Clase constructora. Crea un JPanel que contendra:
+	 * un menú con herramientas, un boton de refrescar
+	 * y un panel con amigos scrolleable.
+	 * @param S - Sesion con la que se logueó el usuario
+	 */
 	public Ventana_Principal_PanelAmigos( final Sesion S ) {
 		
 		this.S = S;
@@ -46,8 +62,8 @@ public class Ventana_Principal_PanelAmigos extends JPanel{
 		menuBar.add( menu );
 		miAgregarAmigo = new JMenuItem("Agregar amigo");
 		menu.add(miAgregarAmigo);
-		miEliminarAmigo = new JMenuItem("bla");
-		menu.add(miEliminarAmigo);
+		miPublicaciones = new JMenuItem("Ver mis publicaciones");
+		menu.add(miPublicaciones);
 		menu.setFocusable( true );
 		
 		add( menuBar , "center,split 2");
@@ -70,8 +86,11 @@ public class Ventana_Principal_PanelAmigos extends JPanel{
 	}
 	
 	/**
-	 * @param
-	 * @return
+	 * Actualiza la lista de amigos recreando los labels contenedores
+	 * del nombre y el icono de online/offline.
+	 * 
+	 * @param amigos  - array de User de amigos
+	 * @return amigosLbl - array de JLabel de amigos
 	 * */
 	
 	public JLabel[] actualizarListaAmigos ( User[] amigos ) {
@@ -79,13 +98,6 @@ public class Ventana_Principal_PanelAmigos extends JPanel{
 		for ( Component c : friendsList.getComponents())
 			friendsList.remove(c);
 		
-		friendsList.revalidate();
-		 
-		for (User u : amigos) {
-			System.out.println(u.nombre);
-			System.out.println(u.online);
-		}
-		System.out.println("--------");
 		if (amigos.length == 0)
 			return null;
 		
@@ -96,6 +108,7 @@ public class Ventana_Principal_PanelAmigos extends JPanel{
 			amigosLbl[i].setFont( new Font ( "Tahoma" , Font.PLAIN , 12 ) );
 			amigosLbl[i].setBackground( getBackground() );
 			amigosLbl[i].setEnabled(true);
+			amigosLbl[i].setToolTipText( "Clickea para ver las opciones" );
 			amigosLbl[i].setText(amigos[i].nombre );
 			
 			if ( amigos[i].online != 0 )

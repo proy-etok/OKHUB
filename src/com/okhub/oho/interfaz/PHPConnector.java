@@ -7,7 +7,7 @@ import java.net.URLConnection;
 
 public class PHPConnector {
 	
-	private static String conStrURL = "http://okhub.net76.net/Gseva/index.php?";
+	private static String conStrURL = "http://okhub.net76.net/OHO/index.php?";
 
 	
 	  public static String funcion_PHP(String f)
@@ -59,7 +59,6 @@ public class PHPConnector {
 	    	{
 	    		retorno += (line + "\n");
 	    		line = BffR.readLine();
-	    		line += "";
 	    		
 	    	}while(!line.contains("EOF"));
 	    	
