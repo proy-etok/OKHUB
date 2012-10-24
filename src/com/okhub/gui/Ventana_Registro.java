@@ -299,7 +299,6 @@ public class Ventana_Registro extends JDialog implements Jefe {
 
 	@Override
 	public void atenderTareas() {
-		// TODO Auto-generated method stub
 		
 	}
 	

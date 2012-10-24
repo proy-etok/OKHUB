@@ -12,6 +12,5 @@ public class TareaFinalizada extends Event
 	{
 		super(target, id, arg);
 		this.tarea = arg;
-		// TODO Auto-generated constructor stub
 	}
 }
