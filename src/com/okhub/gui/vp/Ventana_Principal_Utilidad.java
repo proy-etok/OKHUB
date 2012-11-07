@@ -16,12 +16,17 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.Timer;
 
 import net.miginfocom.swing.MigLayout;
 
 import com.okhub.oho.interfaz.Mensaje;
 import com.okhub.oho.interfaz.Publicacion;
 import com.okhub.oho.interfaz.Sesion;
+import com.okhub.oho.interfaz.User;
+import com.okhub.oho.interfaz.threading.Cadete;
+import com.okhub.oho.interfaz.threading.Jefe;
+import com.okhub.oho.interfaz.threading.Tarea;
 
 
 /**
@@ -33,7 +38,7 @@ import com.okhub.oho.interfaz.Sesion;
  * @version 0.0.1
  * @see Ventana_Principal
  */
-public class Ventana_Principal_Utilidad extends Ventana_Principal {
+public class Ventana_Principal_Utilidad extends Ventana_Principal implements Jefe{
 	
 	Sesion S;
 	JTextField tfenviar;
@@ -63,15 +68,31 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 	public Ventana_Principal_Utilidad(Sesion Ses) {
 		super(Ses);
 		this.S = Ses;
+		jefe_principal = this;
 		System.out.println( );
+		
+		
 		
 		friendsPane.botonRefrescar.addActionListener( new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				RefrescarListaAmigos();
+				if(friendsPane.botonRefrescar.isEnabled())
+					friendsPane.botonRefrescar.setEnabled(false);
+				S.agregarTarea( new Tarea ( "ra PARA: imprimir_Amigos", jefe_principal ));
 			}
 		});
+		Timer timerRefrescarAmigos = new Timer (40000, new ActionListener ()
+		{
+		    public void actionPerformed(ActionEvent e)
+		    {
+		    	System.out.println("Refrescan2 amigos");
+		    	if(friendsPane.botonRefrescar.isEnabled())
+					friendsPane.botonRefrescar.setEnabled(false);
+		    	S.agregarTarea( new Tarea ( "ra PARA: imprimir_Amigos", jefe_principal ));
+		     }
+		});
+		timerRefrescarAmigos.start();
 		
 		friendsPane.botonRefrescar.doClick();
 		
@@ -100,9 +121,20 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 				refrescarPanelInicio();
 			}
 		} );
+		Timer timerRefrescarInicio = new Timer (60000, new ActionListener ()
+		{
+		    public void actionPerformed(ActionEvent e)
+		    {
+		    	System.out.println("Refrescan2 inicio");
+		    	refrescarPanelInicio();
+		     }
+		});
+		timerRefrescarInicio.start();
+
 
 	}
 	
+		
 	/**
 	 * Refresca el panel de amigos recreandolo.
 	 * Warning: El codigo tiene un nivel elevado de hinduismo
@@ -111,9 +143,8 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 	 * @see Ventana_Principal_PanelAmigos
 	 */
 	
-	public void RefrescarListaAmigos (  ) {
-		JLabel[] amigosLbl = friendsPane.actualizarListaAmigos( S.obtenerListaAmigos() );
-		
+	public void RefrescarListaAmigos ( User[] amigos ) {
+		JLabel[] amigosLbl = friendsPane.actualizarListaAmigos( amigos );
 		if ( amigosLbl != null )
 		for ( final JLabel lbl : amigosLbl ) {
 			
@@ -140,7 +171,9 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 									if ( existeTab( tabbedPane , lbl.getText() ))
 										tabbedPane.removeTabAt( tabbedPane.indexOfTab( lbl.getText() ) );
 									JOptionPane.showMessageDialog( lbl , lbl.getText() + " eliminadisimo"   , "Tenes un amigo menos" , JOptionPane.INFORMATION_MESSAGE );
-									RefrescarListaAmigos();
+									if(friendsPane.botonRefrescar.isEnabled())
+										friendsPane.botonRefrescar.setEnabled(false);
+									S.agregarTarea( new Tarea ( "ra PARA: imprimir_Amigos", jefe_principal ));
 								}
 							}
 						});
@@ -189,24 +222,29 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 					lbl.setForeground( Color.black );
 				}
 			} );
+			if(!friendsPane.botonRefrescar.isEnabled())
+				friendsPane.botonRefrescar.setEnabled(true);
 		}
 		
 		friendsPane.friendsList.repaint();
 	}
 	
 	/**
-	 * Refresca el panel de inicio recreandolo.
+	 * Refresca el panel de inicio recreandolo. El programa lo creará en el
+	 * mismo index en el tabbedPane.
 	 * @see Ventana_Principal_Inicio#Ventana_Principal_Inicio(Sesion, Ventana_Principal_PanelAmigos)
 	 */
 	
 	public void refrescarPanelInicio () {
-		
+		int index = (tabbedPane.getSelectedIndex() == tabbedPane.indexOfTab("Inicio") ) 
+				? tabbedPane.indexOfTab("Inicio") : -100;
 		tabbedPane.removeTabAt(tabbedPane.indexOfTab("Inicio"));
-		tabbedPane.addTab("Inicio" , new JScrollPane( 
+		tabbedPane.insertTab("Inicio" , null , new JScrollPane( 
 				new Ventana_Principal_Inicio(S , friendsPane ) , 
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED ,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED ) );
-		
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED ) , null , 0 );
+		if ( index != -100 )
+			tabbedPane.setSelectedIndex(tabbedPane.indexOfTab("Inicio"));
 	}
 	
 	/**
@@ -224,7 +262,9 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 		if ( S.existeUsuario( input ) ) {
 			S.agregarAmigo( input );
 			JOptionPane.showMessageDialog(friendsPane.menu, input + " Agregadisimo" , "Felicitaciones!" , JOptionPane.INFORMATION_MESSAGE );
-			RefrescarListaAmigos();
+			if(friendsPane.botonRefrescar.isEnabled())
+				friendsPane.botonRefrescar.setEnabled(false);
+			S.agregarTarea( new Tarea ( "ra PARA: imprimir_Amigos", jefe_principal ));
 			return;
 		}
 		
@@ -241,6 +281,44 @@ public class Ventana_Principal_Utilidad extends Ventana_Principal {
 		tabbedPane.addTab("Mis Publicaciones", new Ventana_Principal_Publicacion( null , S ) );
 		agregar_botonX("Mis Publicaciones");
 		tabbedPane.setSelectedIndex( tabbedPane.indexOfTab("Mis Publicaciones"));
+		
+	}
+	
+	@Override
+	/**
+	 * Sobreescritura del metodo de la interfaz Jefe: 
+	 * describe los metodos que se efectuarán cuando la Sesión entregue los resultados
+	 * de la conección con el servidor.
+	 */
+	public void entregarTarea(Tarea t) {
+		
+		if( t.nombre.contains( " PARA: " ) )
+			if( t.nombre.split( " PARA: " ).length > 1 )
+			{
+				switch( ( t.nombre.split(" PARA: ") )[1] )
+				{
+				
+					case "refrescar_Inicio":
+						refrescarPanelInicio();
+						break;
+					
+					case "imprimir_Amigos":
+						RefrescarListaAmigos((User[])t.resultado);
+						break;
+						
+					case "IMPRIMIR EN PANTALLA": System.out.println(t.resultado); break;
+					
+					case "deshacer":
+						System.out.println(" MUERE: " + t.resultado); 
+						try {
+							((Cadete)t.resultado).join(100);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						} 
+						break;
+					default: break;
+				}
+			}				
 		
 	}
 }

@@ -2,9 +2,13 @@ package com.okhub.oho.interfaz;
 
 import com.okhub.data.JSON;
 import com.okhub.data.MD5;
+import com.okhub.gui.Ventana_Registro_Verificacion;
+import com.okhub.gui.vp.Ventana_Principal_Utilidad;
+import com.okhub.oho.interfaz.threading.Cadete;
+import com.okhub.oho.interfaz.threading.Tarea;
 
 
-public class Sesion
+public class Sesion extends Cadete
 {
     private User user = null;
     
@@ -159,6 +163,111 @@ public class Sesion
     	return tomarResultado( PHPConnector.funcion_PHP("agregar_Publicacion" , getUserStr() , contenido , adjunto ) );
     	
     }
+    
+    /**
+	 * Lleva a cabo la tarea mediante un switch monstruoso que verifica 
+	 * 
+	 * @param t - Tarea a realizar
+	 * @return - true si se pudo realizar la tarea, sino false
+	 * 
+	 * @see Tarea#nombre
+	 */
+	@Override
+	public boolean realizarTarea(Tarea t)
+	{
+		boolean realizada = false; 
+		
+		try
+		{
+			Ventana_Registro_Verificacion vrv = null;
+			
+			switch((t.nombre.split(" PARA: "))[0])
+			{
+			case "NOOP": Cadete.sleep(4000); realizada = true; break;
+			
+			case "e": Cadete.sleep((int)t.parametros[0]); 
+				t.resultado = true; 
+				t.jefe.entregarTarea(t); 
+				realizada = true; 
+				break;
+			
+			case "eu":
+				t.resultado = Sesion.existeUsuario(((String)t.parametros[0]));
+				realizada = true;
+				t.jefe.entregarTarea(t);
+				break;
+			
+				
+			case "op":
+				t.resultado = obtenerPublicaciones( (String)t.parametros[0] );
+				realizada = true;
+				t.jefe.entregarTarea(t);
+				break;
+			
+			case "ar":
+				t.resultado = acusarRecibo( (String)t.parametros[0],(String)t.parametros[1] );
+				realizada = true;
+				t.jefe.entregarTarea(t);
+				break;
+				
+			case "em":
+				t.resultado = enviarMensaje( (String)t.parametros[0],(String)t.parametros[1] );
+				realizada = true;
+				t.jefe.entregarTarea(t);
+				break;
+				
+			case "po":
+				t.resultado = ponerOnline( (String)t.parametros[0], (boolean)t.parametros[1] );
+				realizada = true;
+				t.jefe.entregarTarea(t);
+				break;
+				
+			case "pod":
+				ponerOnline( (String)t.parametros[0], (boolean)t.parametros[1] );
+				t.resultado = this;
+				t.jefe.entregarTarea(t);
+				System.out.println("Despidiendo al Cadete"); 
+				realizada = true;
+				despedido = true;
+				break;
+				
+			case "olm":
+				t.resultado = obtenerListaMensaje( (String)t.parametros[0] );
+				realizada = true;
+				t.jefe.entregarTarea(t);
+				break;
+				
+			case "ri":
+				((Ventana_Principal_Utilidad)t.parametros[1]).refrescarPanelInicio();
+				realizada = true;
+				t.jefe.entregarTarea(t);
+				break;
+				
+			case "ra":
+				t.resultado = obtenerListaAmigos();
+				realizada = true;
+				t.jefe.entregarTarea(t);
+				break;
+				
+			case "d":  
+				t.nombre = "* PARA: deshacer";
+				System.out.println("Despidiendo al Cadete"); 
+				t.resultado = this;
+				t.jefe.entregarTarea(t);
+				realizada = true;
+				despedido = true;
+				break;
+			
+			default: Cadete.sleep(100); realizada = true; t.resultado = true; break;
+			}
+			
+		} catch (Exception e )
+		{
+			e.printStackTrace();
+		}
+		
+		return realizada;
+	}
     
 }
 

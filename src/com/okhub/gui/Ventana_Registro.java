@@ -2,28 +2,28 @@ package com.okhub.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
-import java.awt.Font;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
-import com.okhub.testing.Cadete;
-import com.okhub.testing.Jefe;
-import com.okhub.testing.Tarea;
-
-import java.awt.Component;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Toolkit;
+import com.okhub.oho.interfaz.threading.Cadete;
+import com.okhub.oho.interfaz.threading.Jefe;
+import com.okhub.oho.interfaz.threading.Tarea;
 
 /**
  * @author GSeva
@@ -50,7 +50,7 @@ public class Ventana_Registro extends JDialog implements Jefe {
 	JButton buttonRegistrarse = new JButton("Registrarse");
 	
 	Cadete Carlos;
-	Jefe esta;
+	Jefe jefe;
 	
 
 	public JComboBox<String> comboBoxSexo;
@@ -239,7 +239,7 @@ public class Ventana_Registro extends JDialog implements Jefe {
 					public void actionPerformed(ActionEvent arg0) {
 						
 						dispose();
-						Carlos.agregarTarea( new Tarea ("PILLO", esta ) );
+						Carlos.agregarTarea( new Tarea ("d", jefe ) );
 						Ventana_Login_Utilidad.Crear_Ventana_Login();
 						
 						
@@ -255,7 +255,6 @@ public class Ventana_Registro extends JDialog implements Jefe {
 	/**
 	 * Metodo que les asiga parametros a los textfields de error,
 	 * como el color de fondo - para que no se vean inicialmente.
-	 * @return
 	 * */
 	
 	public void Ajustar_TextFieldError ( JTextField tf ) {
@@ -295,11 +294,6 @@ public class Ventana_Registro extends JDialog implements Jefe {
 				default: break;
 				}
 			}					
-	}
-
-	@Override
-	public void atenderTareas() {
-		
 	}
 	
 } // fin clase Ventana_Registro

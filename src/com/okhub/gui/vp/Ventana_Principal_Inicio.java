@@ -56,7 +56,7 @@ public class Ventana_Principal_Inicio extends JPanel {
 	 * @see Sesion#obtenerAmigosEspera()
 	 * @see Sesion#agregarPublicacion(String, String)
 	 */
-	public Ventana_Principal_Inicio ( final Sesion Ses , final Ventana_Principal_PanelAmigos pa ) {
+	public Ventana_Principal_Inicio ( final Sesion Ses , Ventana_Principal_PanelAmigos pa ) {
 		
 		this.S = Ses;
 		setLayout(new MigLayout("fillx","[grow]","5[pref]"));
@@ -70,6 +70,35 @@ public class Ventana_Principal_Inicio extends JPanel {
 		add( botonRefrescarInicio, "wrap");
 		
 		User[] amigosEspera = Ses.obtenerAmigosEspera();
+		agregarAmigosEspera(amigosEspera , pa);
+		
+		tfPublicar = new JTextField();
+		tfAdjunto = new JTextField();
+		JButton btnPublicar = new JButton("Publicar");
+		
+		add(new JLabel("Hacer una Publicacion"), "width max(30% , pref),split 2");
+		add(tfPublicar , "wrap,growx");
+		add(new JLabel("Agregar contenido"), "width max(30% , pref),split 2");
+		add(tfAdjunto , "wrap,growx");
+		
+		btnPublicar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(final ActionEvent arg0) {
+				
+				if ( S.agregarPublicacion( tfPublicar.getText(), tfAdjunto.getText() ) ) {
+					tfPublicar.setText("");
+					tfAdjunto.setText("");
+				}
+
+			}
+		});
+
+		add(btnPublicar , "right" );
+
+	}
+	
+	public void agregarAmigosEspera(User[] amigosEspera, final Ventana_Principal_PanelAmigos pa) {
 		if ( amigosEspera != null ) {
 			for (final User amigo : amigosEspera ) {
 				final JPanel panelAmigo = new JPanel(new MigLayout("fillx","[grow]","10[]"));
@@ -115,31 +144,5 @@ public class Ventana_Principal_Inicio extends JPanel {
 				
 			}
 		}
-		
-		tfPublicar = new JTextField();
-		tfAdjunto = new JTextField();
-		JButton btnPublicar = new JButton("Publicar");
-		
-		add(new JLabel("Hacer una Publicacion"), "width max(30% , pref),split 2");
-		add(tfPublicar , "wrap,growx");
-		add(new JLabel("Agregar contenido"), "width max(30% , pref),split 2");
-		add(tfAdjunto , "wrap,growx");
-		
-		btnPublicar.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(final ActionEvent arg0) {
-				
-				if ( S.agregarPublicacion( tfPublicar.getText(), tfAdjunto.getText() ) ) {
-					tfPublicar.setText("");
-					tfAdjunto.setText("");
-				}
-
-			}
-		});
-
-		add(btnPublicar , "right" );
-
-	}
-
+	}	
 }

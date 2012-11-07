@@ -11,9 +11,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.Timer;
 
 import com.okhub.oho.interfaz.Mensaje;
+import com.okhub.oho.interfaz.Publicacion;
 import com.okhub.oho.interfaz.Sesion;
+import com.okhub.oho.interfaz.threading.Jefe;
+import com.okhub.oho.interfaz.threading.Tarea;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -29,7 +33,7 @@ import net.miginfocom.swing.MigLayout;
  * @see Ventana_Principal
  */
 
-public class Ventana_Principal_Chat extends JPanel {
+public class Ventana_Principal_Chat extends JPanel implements Jefe {
 
 	/**
 	 * 
@@ -40,6 +44,10 @@ public class Ventana_Principal_Chat extends JPanel {
 	JTextField tfenviar;
 	JButton jbenviar;
 	JTextPane chat;
+	private Timer timerRefrescarChat;
+	int contadorRefrescar = 0;
+	JButton jbActualizar;
+	Jefe jefe_chat;
 	
 	/**
 	 * Metodo constructor del panel del chat
@@ -52,10 +60,10 @@ public class Ventana_Principal_Chat extends JPanel {
 	 * El contenedor principal al que se va a agregar una pestaña
 	 */
 	
-	public Ventana_Principal_Chat ( final String title , Sesion Ses , JTabbedPane tabbedPane ) 
+	public Ventana_Principal_Chat ( final String title , Sesion Ses , final JTabbedPane tabbedPane ) 
 	{
 		this.S = Ses;
-		
+		jefe_chat = this;
 		
 		if ( Ventana_Principal.existeTab( tabbedPane, title ) ) {
 			tabbedPane.setSelectedIndex( tabbedPane.indexOfTab(title) );
@@ -72,24 +80,44 @@ public class Ventana_Principal_Chat extends JPanel {
 		panel.add( tfenviar , "split 3, bottom, growx" );
 		jbenviar = new JButton("Enviar");
 		panel.add( jbenviar , "bottom");
-		JButton jbactualizar = new JButton("Actualizar");
-		panel.add( jbactualizar , "bottom,right");
+		jbActualizar = new JButton("Actualizar");
+		panel.add( jbActualizar , "bottom,right");
 		tabbedPane.addTab( title , panel );
 		jbenviar.addActionListener( new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if ( !tfenviar.getText().equals( "" ) )
-				S.enviarMensaje( title , tfenviar.getText() );
-				tfenviar.setText("");
-				actualizarListaMensajes( title  );
+				enviarMensaje( title );
 			}
 		});
-		jbactualizar.addActionListener( new ActionListener() {
+		jbActualizar.addActionListener( new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				actualizarListaMensajes( title  );
+				if(jbActualizar.isEnabled())
+					jbActualizar.setEnabled(false);
+				S.agregarTarea( new Tarea ( "olm PARA: actualizar_Lista" , jefe_chat , new Object[]{ title }));
 			}
 		});
+		
+		timerRefrescarChat = new Timer (5000, new ActionListener ()
+		{
+		    public void actionPerformed(ActionEvent e)
+		    {
+		    	while(!( tabbedPane.getSelectedIndex() == tabbedPane.indexOfTab(title) ) ) {
+		    		contadorRefrescar++;
+		    		if(contadorRefrescar >= 10)
+		    			break;
+		    		System.out.println("la ventana de " + title + " no está seleccionada, refrescando en " + (50000 - (contadorRefrescar * 5000)));
+		    		return;
+		    	}
+		    	System.out.println("refrescan2 mensajes de " + title);
+		    	if(jbActualizar.isEnabled())
+					jbActualizar.setEnabled(false);
+		    	S.agregarTarea( new Tarea ( "olm PARA: actualizar_Lista" , jefe_chat , new Object[]{ title }));
+		    	contadorRefrescar = 0;
+		     }
+		});
+		timerRefrescarChat.start();
 		
 		tfenviar.addKeyListener( new KeyListener() {
 			
@@ -124,9 +152,11 @@ public class Ventana_Principal_Chat extends JPanel {
 	
 	public void enviarMensaje ( String title ){
 		
-		S.enviarMensaje( title , tfenviar.getText() );
+		S.agregarTarea(new Tarea( "em PARA: default" , jefe_chat , new Object[]{ title , tfenviar.getText() } ) );
 		tfenviar.setText("");
-		actualizarListaMensajes( title );
+		if(jbActualizar.isEnabled())
+			jbActualizar.setEnabled(false);
+		S.agregarTarea( new Tarea ( "olm PARA: actualizar_Lista" , jefe_chat , new Object[]{ title }));
 		
 	}
 		
@@ -139,9 +169,9 @@ public class Ventana_Principal_Chat extends JPanel {
 	 * @see Sesion#obtenerListaMensaje(String)
 	 */
 		
-	public void actualizarListaMensajes ( String amigo ){
+	public void actualizarListaMensajes ( Mensaje[] mensajes ){
 		
-		Mensaje[] mensajes = S.obtenerListaMensaje( amigo );
+//		Mensaje[] mensajes = S.obtenerListaMensaje( amigo );
 		String mensaje = "";
 		
 		if ( mensajes.length == 0 ) return;
@@ -153,15 +183,36 @@ public class Ventana_Principal_Chat extends JPanel {
 			mensaje += mensajes[i].hora + "] : \n";
 			mensaje += ">>" + mensajes[i].mensaje + "\n";
 	
-			System.out.println(mensajes[i].destino);
-			System.out.println(S.getUser());
+//			System.out.println(mensajes[i].destino);
+//			System.out.println(S.getUser());
 			if ( mensajes[i].destino.toLowerCase().contentEquals( S.getUserStr().toLowerCase() ) ) {
-				S.acusarRecibo( mensajes[i].origen , mensajes[i].hora );
+				
+//				S.agregarTarea( new Tarea( "ar PARA: default" , jefe_chat , new Object[]{mensajes[i].origen , mensajes[i].origen} ));
+//				S.acusarRecibo( mensajes[i].origen , mensajes[i].hora );
 				mensajes[i].recibido = 1;
 			}	
 		
 		chat.setText( mensaje );
 		}
+		if(!jbActualizar.isEnabled())
+			jbActualizar.setEnabled(true);
+		timerRefrescarChat.restart();
+	}
+
+	@Override
+	public void entregarTarea(Tarea t) {
+		
+		if( t.nombre.contains( " PARA: " ) )
+			if( t.nombre.split( " PARA: " ).length > 1 )
+			{
+				switch( ( t.nombre.split(" PARA: ") )[1] )
+				{
+				case "actualizar_Lista":
+					actualizarListaMensajes( (Mensaje[])t.resultado  );
+					break;
+				default: break;
+				}
+			}			
 		
 	}
 	

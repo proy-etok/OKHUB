@@ -11,9 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
 import com.okhub.oho.interfaz.Sesion;
-import com.okhub.testing.Cadete;
-import com.okhub.testing.Jefe;
-import com.okhub.testing.Tarea;
+import com.okhub.oho.interfaz.threading.Tarea;
 
 /**
  * @author GSeva
@@ -49,7 +47,7 @@ public class Ventana_Registro_Utilidad extends Ventana_Registro {
 	
 	public Ventana_Registro_Utilidad() 
 	{
-		esta = this;
+		jefe = this;
 
 		System.out.printf( comboBoxSexo.getSelectedItem().toString() );
 		Agregar_Focus_Listener_textField( textFieldUsuario );
@@ -88,16 +86,16 @@ public class Ventana_Registro_Utilidad extends Ventana_Registro {
 				JTextField tferror = null;
 				if ( nombre.contains( "Usuario" ) ) {	
 					tferror = textFieldUsuarioError;
-					Carlos.agregarTarea( new Tarea("VERIFICARUSUARIO PARA: IMPRIMIR TFERROR" , esta , new Object[]{tferror,textFieldUsuario.getText()} ) );
+					Carlos.agregarTarea( new Tarea("vu PARA: IMPRIMIR TFERROR" , jefe , new Object[]{tferror,textFieldUsuario.getText()} ) );
 //					tferror.setText( vrv.Verificar_Datos_Usuario( textFieldUsuario.getText() ) );
-					if ( tferror.getText().startsWith( "*" ) ) 
-						tferror.setForeground( Color.RED );
-					else
-						tferror.setForeground( Color.GREEN );
+//					if ( tferror.getText().startsWith( "*" ) ) 
+//						tferror.setForeground( Color.RED );
+//					else
+//						tferror.setForeground( Color.GREEN );
 				}
 				if ( nombre.contains( "DirCorreo" ) ) {	
 					tferror = textFieldDirCorreoError;
-					Carlos.agregarTarea( new Tarea("VERIFICARCORREO PARA: IMPRIMIR TFERROR" , esta , new Object[]{tferror,textFieldDirCorreo.getText() , textFieldRepetirDirCorreo.getText() } ) );
+					Carlos.agregarTarea( new Tarea("vc PARA: IMPRIMIR TFERROR" , jefe , new Object[]{tferror,textFieldDirCorreo.getText() , textFieldRepetirDirCorreo.getText() } ) );
 //					tferror.setText( vrv.Verificar_Datos_Correo( textFieldDirCorreo.getText() , textFieldRepetirDirCorreo.getText() ) );
 				}
 				if ( nombre.contains( "Fecha" ) ) {	
@@ -128,8 +126,6 @@ public class Ventana_Registro_Utilidad extends Ventana_Registro {
 		vrv.Verificar_Datos_Correo( textFieldDirCorreo.getText() , textFieldRepetirDirCorreo.getText() );
 		vrv.Verificar_Datos_Fecha( textFieldFecha.getText() );
 		vrv.Verificar_Datos_Pais( textFieldPais.getText() );
-//		vrv.AgregarAño()
-		
 		
 		if ( verificar_campos( ) ) {
 			

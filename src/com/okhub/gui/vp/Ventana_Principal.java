@@ -1,5 +1,6 @@
 package com.okhub.gui.vp;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -23,7 +24,11 @@ import javax.swing.border.SoftBevelBorder;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.okhub.oho.interfaz.Publicacion;
 import com.okhub.oho.interfaz.Sesion;
+import com.okhub.oho.interfaz.threading.Cadete;
+import com.okhub.oho.interfaz.threading.Jefe;
+import com.okhub.oho.interfaz.threading.Tarea;
 import com.okhub.pizarron.PizarronPanel;
 
 /**
@@ -33,9 +38,11 @@ import com.okhub.pizarron.PizarronPanel;
  * @author Gseva
  * @see Ventana_Principal_Utilidad
  */
-public class Ventana_Principal {
+public class Ventana_Principal{
 
+	
 	JFrame frame;
+	public Jefe jefe_principal;
 	
 	/**
 	 * El tabbed pane es el elemento contenedor general 
@@ -68,6 +75,7 @@ public class Ventana_Principal {
 	public Ventana_Principal(Sesion S) {
 		
 		Ses = S;
+		Ses.start();
 		initialize();
 		
 	}
@@ -79,7 +87,7 @@ public class Ventana_Principal {
 		frame = new JFrame();
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(Ventana_Principal.class.getResource("/com/okhub/gui/EscudoOK.png")));
 		frame.setBounds(100, 100, 639, 450);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.addWindowListener( new WindowListener() {
 			
 			@Override public void windowOpened(WindowEvent arg0) {}
@@ -89,12 +97,11 @@ public class Ventana_Principal {
 			@Override public void windowActivated(WindowEvent arg0) {}
 			@Override 
 			public void windowClosing(WindowEvent arg0) {
-				Ses.ponerOnline( Ses.getUserStr(), false );
+//				Ses.ponerOnline(Ses.getUserStr(), false);
+				Ses.agregarTarea( new Tarea("pod PARA: default" , jefe_principal , new Object[]{ Ses.getUserStr() , false }) );
 			}
 			@Override
 			public void windowClosed(WindowEvent arg0) {
-				Ses.ponerOnline( Ses.getUserStr(), false );
-				
 			}
 		});
 		
@@ -194,5 +201,7 @@ public class Ventana_Principal {
 			}
 		});
 	}
+
+
 	
 }

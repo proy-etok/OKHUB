@@ -1,9 +1,35 @@
-package com.okhub.testing;
+package com.okhub.oho.interfaz.threading;
 
-import javax.swing.JLabel;
+
+
+/**
+ * Clase de Tarea. Para crear una necesita un nombre, parametros y un Jefe.
+ * La prioridad y el maximo de reintentos son opcionales.
+ * 
+ * @author Gseva
+ * @see Tarea#nombre - Para mas información sobre las funciones utilizadas.
+ *
+ */
 
 public class Tarea implements Comparable<Tarea>
 {
+	
+	/**
+	 * Nombre de la funcion a llamar
+	 * <p>
+	 * Funciones soportadas:
+	 * <p>
+	 * "e" : esperar parametros[0] milisegundos <br>
+	 * "d" : join del thread (terminarlo) <br>
+	 * "eu" : existeUsuario <br>
+	 * "vu" : Verificar_Datos_Usuario <br>
+	 * "vc" : Verificar_Datos_Correo <br>
+	 * "op" : obtenerPublicaciones <br>
+	 * "em" : enviarMensaje <br>
+	 * "ar" : acusarRecibo <br>
+	 * "ar" : acusarRecibo <br>
+	 * 
+	 */
 	public String nombre = "NOOP";
 		
 	public Object resultado = null;
